@@ -135,6 +135,7 @@
     .price-val{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:600;color:var(--orange);}
 
     /* ─── オリジナル商品（特別デザイン） ─── */
+	.original-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; padding: 5px; }  
     .orig-card{
       background:linear-gradient(160deg,var(--navy) 0%,#002288 100%);
       margin:14px 14px 0;border-radius:12px;
@@ -145,10 +146,14 @@
     .orig-ruby{font-size:10px;color:var(--orange);letter-spacing:0.3em;margin-bottom:5px;font-family:'Noto Serif JP',serif;}
     .orig-name{font-family:'Noto Serif JP',serif;font-size:21px;font-weight:700;color:#fff;line-height:1.4;}
     .orig-tag{font-size:11px;color:rgba(255,255,255,0.45);margin-top:5px;line-height:1.7;}
-    .orig-item{padding:13px 18px;border-bottom:1px solid rgba(232,100,0,0.1);}
+    .orig-item {
+	  padding:5px;
+	  border:1px solid rgba(232,100,0,0.1);
+	  border-radius:8px;
+	}
     .orig-item:last-child{border-bottom:none;}
     /* オリジナルの画像も自然な縦横比 */
-    .orig-img{width:100%;height:auto;aspect-ratio:3/4;object-fit:contain;display:block;margin-bottom:10px;border-radius:6px;}
+    .orig-img{width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;display:block;margin-bottom:10px;border-radius:6px;}
     .orig-iname{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:600;color:var(--gold-l);margin-bottom:3px;}
     .orig-idesc{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:9px;line-height:1.7;}
     .orig-prices{display:flex;flex-wrap:wrap;gap:7px;}
@@ -333,10 +338,10 @@
         <div class="card-head-title">五石橋のおつまみ提案</div>
         <div class="card-head-sub">ロック・水割用のフルーティな味わいに合わせて</div>
       </div></div>
-      <div class="pair-item"><span class="pair-icon"> </span><div><div>鶏のからあげ</div></div></div>
-      <div class="pair-item"><span class="pair-icon"> </span><div><div>さつま揚げ</div></div></div>
-      <div class="pair-item"><span class="pair-icon"> </span><div><div>黒豚のスペリアブ</div></div></div>
-      <div class="pair-item"><span class="pair-icon"> </span><div><div>炭火もも焼き</div></div></div>
+      <div class="pair-item"><span class="pair-icon">🍗</span><div><div>鶏のからあげ</div></div></div>
+      <div class="pair-item"><span class="pair-icon">🍢</span><div><div>さつま揚げ</div></div></div>
+      <div class="pair-item"><span class="pair-icon">🥩</span><div><div>黒豚のスペリアブ</div></div></div>
+      <div class="pair-item"><span class="pair-icon">🔥</span><div><div>炭火もも焼き</div></div></div>
       <div class="pair-foot">たっぷりの氷・冷えた炭酸・レモンまたはライムで割ると、さらに旨い！<br>フルーティーな「五石橋 ロック・水割用」ならではの美味しさです。</div>
     </div>
   </div>
@@ -421,13 +426,13 @@
 </div>
 
 <script>
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 // デフォルト商品データ
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 const BASE = [
   // オリジナル
-  {id:1, cat:'original-goek', name:'お湯割り用', kura:'', desc:'芋臭さをおさえたふくよかな旨味', img:'', sizes:[{s:'1800ml',p:2370}], badges:[], inStock:true},
-  {id:2, cat:'original-goek', name:'ロック・水割り専用', kura:'', desc:'フルーティでスッキリした味わいが大好評', img:'', sizes:[{s:'1800ml',p:2370},{s:'900ml',p:1280},{s:'720ml',p:1640}], badges:[], inStock:true},
+  {id:1, cat:'original-goek', name:'お湯割り用', kura:'', desc:'芋臭さをおさえたふくよかな旨味', img:'https://www.minc.ne.jp/~syudo.t/gosekkyo2.gif', sizes:[{s:'1800ml',p:2370}], badges:[], inStock:true},
+  {id:2, cat:'original-goek', name:'ロック・水割り専用', kura:'', desc:'フルーティでスッキリした味わいが大好評', img:'https://www.minc.ne.jp/~syudo.t/gosekkyou.jpg', sizes:[{s:'1800ml',p:2370},{s:'900ml',p:1280},{s:'720ml',p:1640}], badges:[], inStock:true},
   {id:3, cat:'original-non',  name:'お湯割り・水割り用', kura:'', desc:'昔ながらの黒こうじ仕込み', img:'', sizes:[{s:'1800ml',p:2050}], badges:[], inStock:true},
   // 国分酒造
   {id:4, cat:'kokubun', name:'伊佐美', kura:'国分酒造', desc:'口に含むと軽やかな甘味、果実感がバランス良く広がります。2026年1月15日より発売。販売数少ないのでこの機会にどうぞ！', img:'https://www.minc.ne.jp/~syudo.t/IMG_2025-03-04-13-08-48-7461.jpg', sizes:[{s:'1800ml',p:3500},{s:'720ml',p:1750}], badges:['2026年1月発売','販売数少'], inStock:true},
@@ -465,9 +470,9 @@ const BASE = [
   {id:32, cat:'limited', name:'紅芋（復刻版）', kura:'', desc:'昭和の人気焼酎の復刻版。紅芋の華やかで上質な香りとなめらかな味わい。黒こうじ造り。', img:'https://www.minc.ne.jp/~syudo.t/SSCN09192.JPG', sizes:[{s:'1800ml',p:2270}], badges:['鹿児島限定','昭和の味 復刻版'], inStock:true},
 ];
 
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 // 状態・定数
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 const PW_KEY   = 'sake_admin_pw';
 const PROD_KEY = 'sake_display_products';
 
@@ -487,9 +492,9 @@ function resetProds(){
   alert('リセットしました。');
 }
 
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 // 描画
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 function badgeClass(b){
   if(b.includes('完売')) return 'badge-sold';
   if(b.includes('限定')||b.includes('限')) return 'badge-limit';
@@ -548,9 +553,9 @@ function renderAll(){
   });
 }
 
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 // パスワード
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 function openPw(){
   document.getElementById('pw-input').value='';
   document.getElementById('pw-err').textContent='';
@@ -575,9 +580,9 @@ function changePw(){
   alert('パスワードを変更しました。');
 }
 
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 // 管理パネル
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 function openAdmin(){ renderAdminList(); document.getElementById('admin-overlay').classList.add('show'); }
 function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('show'); }
 
@@ -627,9 +632,9 @@ function delProd(id){
   save();renderAll();renderAdminList();
 }
 
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 // 商品編集
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 const CAT_OPTIONS = Object.entries(CAT_LABELS).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
 
 function openEdit(id){
@@ -692,9 +697,9 @@ function saveProd(){
   save();renderAll();renderAdminList();closeEdit();
 }
 
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 // ナビ
-// ??????????????????????????????????????????
+// ══════════════════════════════════════════
 function navTo(id,btn){
   document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
