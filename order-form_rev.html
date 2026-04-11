@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お申し込みフォーム｜鶴田酒店</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#c8dfff;
+      --bg2:#ddeeff;
+      --navy:#000099;
+      --blue:#0055cc;
+      --orange:#e86400;
+      --red:#cc0000;
+      --text:#1a2a5a;
+      --border:#88b8ee;
+      --white:#f4f9ff;
+      --card:#ffffff;
+      --muted:#4a6080;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;}
+    body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,rgba(0,80,200,0.12) 1px,transparent 1px);background-size:20px 20px;pointer-events:none;z-index:0;}
+    .page-wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 0 60px;}
+
+    .header{background:linear-gradient(180deg,var(--navy) 0%,#0033aa 100%);padding:36px 24px 28px;text-align:center;position:relative;overflow:hidden;}
+    .header::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(255,255,255,0.03) 8px,rgba(255,255,255,0.03) 9px);}
+    .header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),#ffaa44,var(--orange));}
+    .header-label{font-family:'Noto Serif JP',serif;font-size:11px;letter-spacing:0.3em;color:rgba(255,255,255,0.55);margin-bottom:10px;position:relative;}
+    .header-title{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:700;color:#fff;line-height:1.4;letter-spacing:0.05em;position:relative;}
+    .header-sub{margin-top:8px;font-size:12px;color:rgba(255,255,255,0.45);letter-spacing:0.1em;position:relative;}
+
+    .insta-banner{background:linear-gradient(135deg,#833ab4 0%,#fd1d1d 50%,#fcb045 100%);margin:18px 14px 0;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:13px;box-shadow:0 4px 16px rgba(131,58,180,0.25);}
+    .insta-icon{width:38px;height:38px;flex-shrink:0;background:rgba(255,255,255,0.2);border-radius:9px;display:flex;align-items:center;justify-content:center;}
+    .insta-icon svg{width:22px;height:22px;fill:white;}
+    .insta-text{color:white;font-size:12px;line-height:1.6;}
+    .insta-text strong{display:block;font-size:13px;font-weight:500;margin-bottom:2px;}
+
+    .card{background:var(--card);margin:18px 14px 0;border-radius:12px;border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 12px rgba(0,50,150,0.1);}
+    .card-header{background:var(--navy);padding:12px 18px;display:flex;align-items:center;gap:10px;}
+    .card-header-bar{width:5px;height:18px;background:var(--orange);border-radius:3px;flex-shrink:0;}
+    .card-header-title{font-family:'Noto Serif JP',serif;font-size:13px;color:#fff;letter-spacing:0.08em;}
+    .card-body{padding:18px;}
+
+    .field{margin-bottom:18px;}
+    .field:last-child{margin-bottom:0;}
+    label{display:block;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0.08em;margin-bottom:5px;}
+    label .req{color:var(--red);margin-left:4px;font-size:11px;}
+    input[type="text"],input[type="tel"],textarea{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:16px;font-weight:300;color:var(--text);background:var(--white);-webkit-appearance:none;transition:border-color 0.2s,box-shadow 0.2s;}
+    input:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,100,0,0.12);}
+    textarea{resize:vertical;min-height:80px;}
+    .postal-wrap{display:flex;align-items:center;gap:8px;}
+    .postal-wrap input{max-width:140px;}
+    .postal-sym{color:var(--muted);font-size:18px;}
+
+    .sake-section{border:1.5px solid var(--border);border-radius:9px;overflow:hidden;}
+    .sake-group-label{background:var(--navy);padding:11px 15px;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.06em;border-bottom:1px solid rgba(136,184,238,0.3);display:flex;flex-direction:column;gap:2px;}
+    .sake-group-note{font-size:10px;font-weight:300;color:rgba(255,255,255,0.45);font-family:'Noto Sans JP',sans-serif;}
+    .sake-item{display:flex;align-items:center;padding:12px 13px;border-bottom:1px solid #ddeeff;gap:11px;background:var(--card);}
+    .sake-item:last-child{border-bottom:none;}
+    .sake-item.sold-out{opacity:0.45;pointer-events:none;}
+    .sake-info{flex:1;}
+    .sake-name{font-family:'Noto Serif JP',serif;font-size:13px;font-weight:600;color:var(--navy);}
+    .sake-detail{font-size:11px;color:var(--muted);margin-top:2px;}
+    .sake-item-note{font-size:10px;color:rgba(204,0,0,0.7);margin-top:3px;}
+    .sold-badge{font-size:10px;color:white;background:#999;border-radius:4px;padding:2px 6px;margin-top:3px;display:inline-block;}
+    .sake-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+    .sake-price{font-family:'Noto Serif JP',serif;font-size:13px;font-weight:600;color:var(--orange);min-width:52px;text-align:right;}
+
+    .qty-control{display:flex;align-items:center;}
+    .qty-btn{width:28px;height:28px;border:1.5px solid var(--border);background:var(--white);color:var(--navy);font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;-webkit-tap-highlight-color:transparent;user-select:none;}
+    .qty-btn:active{background:var(--bg2);}
+    .qty-num{width:34px;text-align:center;font-family:'Noto Serif JP',serif;font-size:15px;font-weight:600;color:var(--navy);}
+
+    .total-box{background:var(--navy);border-radius:9px;padding:15px 17px;margin-top:15px;}
+    .total-row{display:flex;justify-content:space-between;align-items:center;}
+    .total-label{font-size:12px;color:rgba(255,255,255,0.6);letter-spacing:0.08em;}
+    .total-value{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:#ffcc77;}
+    .total-note{font-size:11px;color:rgba(255,255,255,0.4);margin-top:7px;text-align:right;border-top:1px solid rgba(255,255,255,0.1);padding-top:7px;}
+
+    .shipping-note{background:rgba(204,0,0,0.07);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:11px 13px;font-size:12px;color:var(--red);line-height:1.8;}
+
+    .submit-btn{display:block;width:100%;padding:17px;background:var(--orange);border:none;border-radius:11px;color:#fff;font-family:'Noto Serif JP',serif;font-size:16px;font-weight:600;letter-spacing:0.15em;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:0 4px 16px rgba(232,100,0,0.3);}
+    .submit-btn:active{opacity:0.85;}
+    .submit-btn small{display:block;font-size:11px;font-weight:300;color:rgba(255,255,255,0.75);letter-spacing:0.05em;margin-top:4px;font-family:'Noto Sans JP',sans-serif;}
+    .submit-btn:disabled{opacity:0.6;cursor:not-allowed;}
+
+    .footer{text-align:center;padding:28px 20px 10px;font-size:11px;color:var(--muted);letter-spacing:0.05em;line-height:1.9;}
+    .admin-open-btn{margin-top:12px;display:inline-block;font-size:10px;color:rgba(0,0,153,0.35);background:none;border:1px solid rgba(0,0,153,0.15);border-radius:6px;padding:4px 12px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+
+    /* パスワードモーダル */
+    .pw-overlay{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,80,0.85);align-items:center;justify-content:center;padding:20px;}
+    .pw-overlay.show{display:flex;}
+    .pw-box{background:var(--white);border-radius:14px;padding:26px 22px;max-width:300px;width:100%;text-align:center;border:2px solid var(--orange);}
+    .pw-title{font-family:'Noto Serif JP',serif;font-size:15px;color:var(--navy);margin-bottom:6px;}
+    .pw-sub{font-size:11px;color:var(--muted);margin-bottom:14px;}
+    .pw-input{width:100%;padding:12px;border:2px solid var(--border);border-radius:8px;font-size:20px;text-align:center;letter-spacing:0.3em;margin-bottom:10px;-webkit-appearance:none;background:white;color:var(--navy);}
+    .pw-input:focus{outline:none;border-color:var(--orange);}
+    .pw-err{font-size:12px;color:var(--red);margin-bottom:8px;min-height:18px;}
+    .pw-submit{width:100%;padding:13px;background:var(--orange);border:none;border-radius:8px;color:#fff;font-family:'Noto Serif JP',serif;font-size:14px;cursor:pointer;margin-bottom:10px;letter-spacing:0.08em;}
+    .pw-cancel{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:4px;}
+
+    /* 管理パネル */
+    .admin-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,40,0.97);flex-direction:column;overflow:hidden;}
+    .admin-overlay.show{display:flex;}
+    .admin-head{background:#00008a;border-bottom:2px solid var(--orange);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+    .admin-title{font-family:'Noto Serif JP',serif;font-size:15px;color:var(--orange);letter-spacing:0.1em;}
+    .admin-close{background:none;border:1px solid rgba(255,255,255,0.3);border-radius:7px;color:rgba(255,255,255,0.7);padding:7px 14px;font-size:12px;cursor:pointer;}
+    .admin-body{flex:1;overflow-y:auto;padding:14px;}
+    .admin-notice{background:rgba(232,100,0,0.12);border:1px solid rgba(232,100,0,0.35);border-radius:9px;padding:13px 15px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.9;margin-bottom:16px;}
+    .admin-notice strong{color:var(--orange);}
+    .admin-url-row{display:flex;gap:7px;margin-top:10px;}
+    .admin-url-in{flex:1;padding:9px 11px;background:#000055;border:1px solid #334499;border-radius:6px;color:#fff;font-size:13px;}
+    .admin-url-save{padding:9px 13px;background:var(--orange);border:none;border-radius:6px;color:#fff;font-size:12px;cursor:pointer;white-space:nowrap;}
+    .admin-add-btn{display:block;width:100%;padding:13px;background:none;border:2px dashed var(--orange);border-radius:9px;color:var(--orange);font-family:'Noto Serif JP',serif;font-size:13px;cursor:pointer;letter-spacing:0.1em;margin-bottom:14px;}
+    .admin-gl{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;padding:8px 4px 4px;}
+    .admin-item{background:#0a0a3a;border:1px solid #223366;border-radius:8px;padding:10px 11px;margin-bottom:5px;display:flex;align-items:center;gap:7px;}
+    .admin-iinfo{flex:1;min-width:0;}
+    .admin-iname{font-size:12px;color:#fff;font-family:'Noto Serif JP',serif;}
+    .admin-isub{font-size:10px;color:#889;margin-top:1px;}
+    .admin-iprice{font-family:'Noto Serif JP',serif;font-size:13px;color:var(--orange);white-space:nowrap;}
+    .admin-ibtns{display:flex;gap:4px;flex-shrink:0;}
+    .a-btn{border:none;border-radius:5px;padding:5px 8px;font-size:10px;cursor:pointer;}
+    .a-btn.stock{background:#0a2a0a;color:#5c5;border:1px solid #0a400a;}
+    .a-btn.soldout{background:#2a2a2a;color:#888;border:1px solid #333;}
+    .a-btn.edit{background:#1a1a2a;color:#aac;border:1px solid #334;}
+    .a-btn.del{background:#2a0a0a;color:#e55;border:1px solid #400a0a;}
+    .admin-reset{display:block;width:100%;padding:11px;margin-top:18px;background:none;border:1px solid #334;border-radius:7px;color:#558;font-size:11px;cursor:pointer;}
+
+    /* 商品編集モーダル */
+    .edit-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.88);align-items:flex-end;justify-content:center;}
+    .edit-overlay.show{display:flex;}
+    .edit-modal{background:#0a0a3a;border-radius:18px 18px 0 0;border:1px solid #334;padding:22px 18px 38px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
+    .edit-title{font-family:'Noto Serif JP',serif;font-size:15px;color:var(--orange);letter-spacing:0.08em;margin-bottom:18px;}
+    .ef{margin-bottom:13px;}
+    .ef label{font-size:10px;color:#889;letter-spacing:0.08em;margin-bottom:5px;display:block;}
+    .ef input,.ef select{width:100%;padding:10px 12px;background:#000055;border:1.5px solid #334;border-radius:7px;color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:15px;-webkit-appearance:none;}
+    .ef input:focus,.ef select:focus{outline:none;border-color:var(--orange);}
+    .ef-row{display:flex;gap:9px;}
+    .ef-row .ef{flex:1;}
+    .check-row{display:flex;align-items:center;gap:9px;padding:9px 0;}
+    .check-row label{margin:0;font-size:12px;color:#ccd;}
+    .check-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;}
+    .edit-btns{display:flex;gap:9px;margin-top:18px;}
+    .e-save{flex:1;padding:13px;background:var(--orange);border:none;border-radius:7px;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:600;color:#fff;cursor:pointer;}
+    .e-cancel{padding:13px 18px;background:none;border:1px solid #445;border-radius:7px;color:#889;font-size:13px;cursor:pointer;}
+
+    /* 完了モーダル */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,80,0.88);z-index:100;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.show{display:flex;}
+    .modal{background:var(--white);border-radius:16px;padding:30px 22px;max-width:340px;width:100%;text-align:center;border:2px solid var(--orange);}
+    .modal-icon{font-size:46px;margin-bottom:14px;}
+    .modal-title{font-family:'Noto Serif JP',serif;font-size:19px;font-weight:700;color:var(--navy);margin-bottom:11px;}
+    .modal-body{font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:22px;}
+    .modal-close{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:11px 30px;font-family:'Noto Sans JP',sans-serif;font-size:13px;cursor:pointer;}
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="header">
+    <div class="header-label">ORDER FORM</div>
+    <div class="header-title">鶴田酒店<br>お申し込みフォーム</div>
+    <div class="header-sub">地酒・本格焼酎の専門店</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-bar"></div><div class="card-header-title">お申込みのご案内</div></div>
+    <div class="card-body">
+        下記フォームよりお申し込みください。<br>
+		振込確認後に発送いたします。<br>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-bar"></div><div class="card-header-title">お客様情報</div></div>
+    <div class="card-body">
+      <div class="field"><label>お名前<span class="req">※必須</span></label><input type="text" id="name" placeholder="例：田中 太郎" autocomplete="name"></div>
+      <div class="field"><label>郵便番号<span class="req">※必須</span></label><div class="postal-wrap"><span class="postal-sym">〒</span><input type="text" id="postal" placeholder="000-0000" inputmode="numeric" maxlength="8" oninput="fmtPostal(this)"></div></div>
+      <div class="field"><label>ご住所<span class="req">※必須</span></label><input type="text" id="address" placeholder="都道府県・市区町村・番地" autocomplete="street-address"></div>
+      <div class="field"><label>建物名・部屋番号（任意）</label><input type="text" id="address2" placeholder="例：○○マンション 101号"></div>
+      <div class="field" style="margin-bottom:0;"><label>電話番号<span class="req">※必須</span></label><input type="tel" id="tel" placeholder="例：090-1234-5678" autocomplete="tel"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-bar"></div><div class="card-header-title">ご注文商品</div></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:13px;line-height:1.7;">ご希望の商品の本数を選択してください。価格は全て税込です。</p>
+      <div class="sake-section" id="sake-list"></div>
+      <div class="total-box">
+        <div class="total-row"><div class="total-label">商品合計（税込）</div><div class="total-value" id="total-display">0円</div></div>
+        <div class="total-note">+ 配送料・振込先は別途ご案内いたします</div>
+      </div>
+      <div class="field" style="margin-top:15px;margin-bottom:0;"><label>ご要望・備考（任意）</label><textarea id="note" placeholder="ご希望やご不明な点などお気軽にどうぞ"></textarea></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-bar"></div><div class="card-header-title">お支払い方法（銀行振込）</div></div>
+    <div class="card-body">
+      <div class="shipping-note">
+        🚚 <strong>振込先・配送料のご案内について</strong><br>
+        お申し込み確認後、配送料を含むお振込金額・振込先口座を<br>
+        メールまたはお電話にてご連絡いたします。<br>
+        ご案内をお待ちの上、お振込をお願いいたします。
+      </div>
+    </div>
+  </div>
+
+  <div style="margin:22px 14px 0;">
+    <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">
+      申し込みを送信する
+      <small>※後ほど振込金額・振込先をご連絡します</small>
+    </button>
+  </div>
+
+  <div class="footer">
+	  ご不明な点は<a href="mailto:syudo.t@po.minc.ne.jp">メール（syudo.t@po.minc.ne.jp）</a>にてお問い合わせください。<br><br>
+    &copy; 鶴田酒店
+  </div>
+
+</div>
+
+<!-- パスワードモーダル -->
+<div class="pw-overlay" id="pw-overlay">
+  <div class="pw-box">
+    <div class="pw-title">管理画面</div>
+    <div class="pw-sub">パスワードを入力してください</div>
+    <input type="password" class="pw-input" id="pw-input" placeholder="****" maxlength="20" onkeydown="if(event.key==='Enter')checkPw()">
+    <div class="pw-err" id="pw-err"></div>
+    <button class="pw-submit" onclick="checkPw()">ログイン</button>
+    <br><button class="pw-cancel" onclick="closePw()">キャンセル</button>
+  </div>
+</div>
+
+<!-- 管理パネル -->
+<div class="admin-overlay" id="admin-overlay">
+  <div class="admin-head">
+    <div class="admin-title">管理画面</div>
+    <button class="admin-close" onclick="closeAdmin()">閉じる</button>
+  </div>
+  <div class="admin-body">
+    <div class="admin-notice" id="fs-notice">
+      <strong>メール送信先の設定（Formspree）</strong><br>
+      申し込みを syudo.t@po.minc.ne.jp に直接受け取るには：<br>
+      1. formspree.io で無料登録<br>
+      2. New Form を作成してURLをコピー<br>
+      3. 下に貼り付けて保存
+      <div class="admin-url-row">
+        <input type="text" class="admin-url-in" id="fs-input" placeholder="https://formspree.io/f/xxxxxxxx">
+        <button class="admin-url-save" onclick="saveFs()">保存</button>
+      </div>
+    </div>
+    <div class="admin-notice">
+      <strong>管理画面パスワードの変更</strong>
+      <div class="admin-url-row">
+        <input type="password" class="admin-url-in" id="pw-new" placeholder="新しいパスワード">
+        <button class="admin-url-save" onclick="changePw()">変更</button>
+      </div>
+    </div>
+    <button class="admin-add-btn" onclick="openEdit(null)">+ 商品を追加する</button>
+    <div id="admin-list"></div>
+    <button class="admin-reset" onclick="resetProds()">商品リストを初期値にリセット</button>
+  </div>
+</div>
+
+<!-- 商品編集モーダル -->
+<div class="edit-overlay" id="edit-overlay">
+  <div class="edit-modal">
+    <div class="edit-title" id="edit-title">商品を追加</div>
+    <div class="ef"><label>グループ名（銘柄・蔵元など）</label><input type="text" id="eg" placeholder="例：まぼろしの五石橋（当店オリジナル）" list="eg-dl"><datalist id="eg-dl"></datalist></div>
+    <div class="ef"><label>商品名（飲み方・種別など、任意）</label><input type="text" id="en" placeholder="例：お湯割り用、ロック専用"></div>
+    <div class="ef-row">
+      <div class="ef"><label>容量</label><input type="text" id="es" placeholder="1800ml"></div>
+      <div class="ef"><label>価格（税込・円）</label><input type="number" id="ep" placeholder="2370" inputmode="numeric"></div>
+    </div>
+    <div class="ef"><label>商品メモ（任意）</label><input type="text" id="em" placeholder="数量限定、風味など"></div>
+    <div class="check-row"><input type="checkbox" id="ei" checked><label for="ei">在庫あり（外すと「完売」表示）</label></div>
+    <div class="edit-btns">
+      <button class="e-cancel" onclick="closeEdit()">キャンセル</button>
+      <button class="e-save" onclick="saveProd()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 完了モーダル -->
+<div class="modal-overlay" id="done-modal">
+  <div class="modal">
+    <div class="modal-icon">🍶</div>
+    <div class="modal-title">お申し込みありがとうございます</div>
+    <div class="modal-body">ご注文内容を確認の上、<br><strong>配送料を含むお振込金額・振込先口座</strong>を<br>2〜3営業日以内にご連絡いたします。</div>
+    <button class="modal-close" onclick="document.getElementById('done-modal').classList.remove('show')">閉じる</button>
+  </div>
+</div>
+
+<script>
+const DEFAULTS=[
+  {id:1,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'お湯割り用',         kura:'', desc:'芋臭さをおさえたふくよかな旨味',                               img:'', sizes:[{s:'1800ml',p:2370}],                              badges:[],             note:'芋臭さをおさえたふくよかな旨味', inStock:true},
+  {id:2,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'ロック・水割り専用',  kura:'', desc:'フルーティでスッキリした味わいが大好評',                         img:'', sizes:[{s:'1800ml',p:2370},{s:'900ml',p:1280},{s:'720ml',p:1640}], badges:[],             note:'フルーティでスッキリした味わい大好評', inStock:true},
+  {id:3,  cat:'original-non',  group:'飲ん日和（当店オリジナル）',         name:'お湯割り・水割り用', kura:'', desc:'昔ながらの黒こうじ仕込み',                                       img:'', sizes:[{s:'1800ml',p:2050}],                              badges:[],             note:'昔ながらの黒こうじ仕込み',           inStock:true},
+  {id:4,  cat:'kokubun', group:'伊佐美（国分酒造）',                name:'', kura:'国分酒造', desc:'口に含むと軽やかな甘味、果実感がバランス良く広がります。2026年1月15日より発売。',  img:'img/IMG_2025-03-04-13-08-48-7461.jpg', sizes:[{s:'1800ml',p:3500},{s:'720ml',p:1750}],  badges:['2026年1月発売','販売数少'], note:'軽やかな甘味と果実感', inStock:true},
+  {id:5,  cat:'kokubun', group:'MUGEN白波 お湯割用（国分酒造）',   name:'', kura:'国分酒造', desc:'仕込み水に霧島山系の伏流水を使用。黄こうじ独特の香りと旨味を強調し、酸味の少ない味に仕上げています。', img:'', sizes:[{s:'1800ml',p:2590},{s:'720ml',p:1490}],  badges:[], note:'黄こうじ独特の香りと旨味', inStock:true},
+  {id:6,  cat:'kokubun', group:'大正の一滴（国分酒造）',           name:'', kura:'国分酒造', desc:'老麹造りの芋焼酎を再現。ラベルは焼酎粕を再利用した和紙。角のとれたまろみのある味わい。', img:'img/dezitaisyou.jpg', sizes:[{s:'1800ml',p:2420},{s:'720ml',p:1260}], badges:[], note:'老麹造り・焼酎粕の和紙ラベル', inStock:true},
+  {id:7,  cat:'kokubun', group:'芋（国分酒造）',                   name:'', kura:'国分酒造', desc:'その昔、芋だけで造った焼酎を復活。アルコール分26度。芋こうじ芋100%。', img:'', sizes:[{s:'1800ml',p:2680},{s:'720ml',p:1360}], badges:[], note:'芋こうじ芋100%・26度', inStock:true},
+  {id:8,  cat:'kokubun', group:'カイジュズ パッション（国分酒造）', name:'', kura:'国分酒造', desc:'詳細はお問い合わせください。', img:'img/IMG_2023-06-03-09-57-06-391%20(1)11.jpg', sizes:[], badges:[], note:'', inStock:true},
+  {id:9,  cat:'premire', group:'だいやめ（濱田酒造）', name:'', kura:'濱田酒造', desc:'ライチのように香る芋焼酎。瑞々しいライチを思わせる甘い香りが膨らみます。', img:'img/ISAMI11.JPG', sizes:[{s:'1800ml',p:2670},{s:'900ml',p:1410}], badges:[], note:'ライチを思わせる甘い香り', inStock:true},
+  {id:10, cat:'shirotama', group:'ちご桜（白金酒造）',           name:'', kura:'白金酒造', desc:'吟醸酵母仕込み。吟醸香が引き立ち、華やかでさわやかな味わいが特徴。', img:'', sizes:[{s:'1800ml',p:2120},{s:'900ml',p:1160}], badges:[], note:'吟醸酵母仕込み・華やかな香り', inStock:true},
+  {id:11, cat:'shirotama', group:'白金吟酒（白金酒造）',         name:'', kura:'白金酒造', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
+  {id:12, cat:'others', group:'女王蜂（白玉酒造）',              name:'', kura:'白玉酒造', desc:'魔王の蔵元の焼酎。米焼酎をベースに芋焼酎をブレンド。まろみが調和した風味豊かな焼酎。', img:'img/IMG_2023-06-03-09-58-45-703%20(1).jpg', sizes:[{s:'1800ml',p:2210}], badges:[], note:'米焼酎x芋焼酎ブレンド', inStock:true},
+  {id:13, cat:'others', group:'天誅（てんちゅう）',              name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/DSC_05161.png', sizes:[], badges:[], note:'', inStock:true},
+  {id:14, cat:'others', group:'三岳（三岳酒造）',                name:'', kura:'三岳酒造', desc:'世界自然遺産登録の屋久島の蔵元で造られました。ぬる燗・お湯割りでお楽しみください。', img:'img/DSC_07681.png', sizes:[{s:'1800ml',p:2570},{s:'900ml',p:1420}], badges:[], note:'世界自然遺産・屋久島の蔵元', inStock:true},
+  {id:15, cat:'others', group:'くじら（大海酒造）',              name:'', kura:'大海酒造', desc:'黄金千貫・白こうじ・常圧蒸留で造った芋焼酎のスタンダード。鹿児島県垂水の「寿鶴」を使用。', img:'img/DSC_07691.png', sizes:[{s:'1800ml',p:2920}], badges:[], note:'鹿児島県垂水・ぬる燗・お湯割りで', inStock:true},
+  {id:16, cat:'others', group:'別撰MUGEN白波',                   name:'', kura:'薩摩酒造', desc:'三つの蒸留所からそれぞれの厳選された原酒を最適な割合でブレンド。お湯割専用追求。', img:'', sizes:[{s:'1800ml',p:2750},{s:'900ml',p:1430}], badges:[], note:'3蒸留所ブレンド', inStock:true},
+  {id:17, cat:'others', group:'麦・芋ブレンド長期貯蔵（魔王蔵元）', name:'', kura:'白玉酒造', desc:'麦焼酎の旨味と芋焼酎のふくよかな味わいがバランス良くブレンドされたまろやかな逸品。★魔王の蔵元。', img:'img/DSC_04312.png', sizes:[{s:'1800ml',p:2320}], badges:[], note:'まろやかな逸品', inStock:true},
+  {id:18, cat:'others', group:'さつま島美人',                    name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/SSCN10081.JPG', sizes:[], badges:[], note:'', inStock:true},
+  {id:19, cat:'others', group:'さつま黒こうじ（佐藤酒造）',      name:'', kura:'佐藤酒造', desc:'「佐藤」で名を広めている佐藤酒造の焼酎。なかなか手に入りにくい商品。', img:'', sizes:[{s:'1800ml',p:2990}], badges:[], note:'「佐藤」蔵・入手困難', inStock:true},
+  {id:20, cat:'others', group:'元祖まぼろし',                    name:'', kura:'', desc:'創業当初から黒こうじ一筋。口当たりがよく、甘みのあるまろやかな味わいで非常に人気の高い芋焼酎。', img:'img/SSCN04761.JPG', sizes:[{s:'1800ml',p:2900},{s:'720ml',p:1860}], badges:['数量限定'], note:'黒こうじ一筋・まろやかな味わい', inStock:true},
+  {id:21, cat:'others', group:'さつまの梅酒（元老院）',           name:'', kura:'白玉酒造', desc:'魔王の蔵元が造った梅酒。まろやかな味わいはお食事のひと時を優雅にしてくれます。', img:'img/DSC_04302.png', sizes:[{s:'1800ml',p:1890},{s:'900ml',p:970}], badges:[], note:'魔王の蔵元・まろやかな梅酒', inStock:true},
+  {id:22, cat:'others', group:'甕 長期熟成',                     name:'', kura:'', desc:'5つの蔵元の芋焼酎をブレンドし、甕でじっくり季節を重ねた長期熟成の本格芋焼酎。化粧箱入り。', img:'img/SSCN05971.JPG', sizes:[{s:'1800ml',p:2670}], badges:['年3回限定','化粧箱入り'], note:'5蔵ブレンド・年3回限定', inStock:true},
+  {id:23, cat:'others', group:'れんと（奄美大島開運酒造）',       name:'', kura:'奄美大島開運酒造', desc:'奄美の最高峰「湯湾岳」の名水と黒糖がベース。名曲を聴かせて3か月以上熟成。', img:'', sizes:[{s:'1800ml',p:2200},{s:'900ml',p:1180}], badges:[], note:'奄美・黒糖ベース、名曲熟成3か月以上', inStock:true},
+  {id:24, cat:'others', group:'相良仲右衛門（相良酒造）',         name:'', kura:'相良酒造', desc:'黒こうじ造り・30度。創業者「仲右衛門」の名にちなんで命名。', img:'img/080830_165518.JPG', sizes:[{s:'1800ml',p:2490}], badges:[], note:'黒こうじ造り・30度', inStock:true},
+  {id:25, cat:'others', group:'復刻版 兵六（ひょうろく）',        name:'', kura:'', desc:'昭和の人気焼酎の復刻版。なつかしき昭和の味。販売店指定・数量限定販売ですのでお早めに。', img:'img/SSCN05991.JPG', sizes:[{s:'1800ml',p:2450}], badges:['販売店指定','数量限定'], note:'昭和の味 復刻版・限定販売', inStock:true},
+  {id:26, cat:'others', group:'流川（るかわ）',                   name:'', kura:'', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
+  {id:27, cat:'limited', group:'鬼武蔵（大口酒造）',              name:'', kura:'大口酒造 ※値上げ済', desc:'焼酎「伊佐錦」の大口酒造の鹿児島限定商品。貯蔵酒を吟味・厳選しブレンド。力強くも豊かな芋の味わいと甘く香り高い逸品。', img:'img/20260116_1019314191.JPG', sizes:[{s:'1800ml',p:4280},{s:'720ml',p:1830}], badges:['鹿児島限定'], note:'貯蔵酒厳選ブレンド', inStock:false},
+  {id:28, cat:'limited', group:'薩摩茶屋 鹿児島美人（村尾酒造）',name:'', kura:'村尾酒造 25度', desc:'史跡・薩摩藩公御茶屋跡にちなんで命名。原料は黄金千貫・白豊。黒こうじ甕壺仕込み。', img:'img/20251215_1548158321.JPG', sizes:[{s:'1800ml',p:2380}], badges:['鹿児島限定'], note:'黒こうじ甕壺仕込み・鹿児島限定', inStock:true},
+  {id:29, cat:'limited', group:'篤姫（鹿児島限定）',              name:'', kura:'', desc:'鹿児島県長島町の五つの蔵の結晶。「篤姫酵母」で仕込みました。', img:'', sizes:[{s:'1800ml',p:2000}], badges:['鹿児島限定'], note:'篤姫酵母・五つの蔵の結晶', inStock:true},
+  {id:30, cat:'limited', group:'鹿児島限定（相良酒造）',          name:'', kura:'相良酒造', desc:'昔ながらのクセのある芋焼酎。コガネセンガンを原料に白麹をブレンドして仕込みました。', img:'img/DSC_08701.png', sizes:[{s:'1800ml',p:2290}], badges:['鹿児島限定'], note:'白麹ブレンド・昔ながらの芋焼酎', inStock:true},
+  {id:31, cat:'limited', group:'しま安納（高崎酒造）',            name:'', kura:'高崎酒造', desc:'安納芋を原料とした芋焼酎。安納芋から引き出される甘味とふくよかな芋の香りが楽しめます。', img:'img/SSCN0152.JPG', sizes:[{s:'1800ml',p:2800}], badges:['鹿児島限定'], note:'安納芋使用・種子島産', inStock:true},
+  {id:32, cat:'limited', group:'紅芋 復刻版（昭和の味）',         name:'', kura:'', desc:'昭和の人気焼酎の復刻版。紅芋の華やかで上質な香りとなめらかな味わい。黒こうじ造り。', img:'img/SSCN09192.JPG', sizes:[{s:'1800ml',p:2270}], badges:['鹿児島限定','昭和の味 復刻版'], note:'紅芋・黒こうじ造り・限定販売', inStock:true},
+];
+
+const ADMIN_PW_KEY='sake_admin_pw';
+const PRODS_KEY='sake_products';
+const FS_KEY='sake_formspree';
+
+let prods=[];
+let editingId=null;
+
+async function getProds(){
+  try{
+    const res = await fetch('master.json');
+    if(!res.ok) throw new Error('fetch失敗');
+    return await res.json();
+  }catch(e){
+    console.error(e);
+    return [];
+  }
+}
+function resetProds(){
+  if(!confirm('商品リストを初期値にリセットします。よろしいですか？'))return;
+  prods=JSON.parse(JSON.stringify(DEFAULTS));
+  save();renderForm();renderAdminList();alert('リセットしました。');
+}
+
+function renderForm(){
+  const groups=[...new Set(prods.map(p=>p.group))];
+  let h='';
+  groups.forEach(g=>{
+    h+='<div class="sake-group-label">'+g+'</div>';
+    prods.filter(p=>p.group===g).forEach(p=>{
+      const sc=p.inStock?'':' sold-out';
+      const label=p.name?p.name:g.split('(')[0].split('\uFF08')[0].trim();
+      h+='<div class="sake-item'+sc+'" data-id="'+p.id+'">'
+        +'<div class="sake-info">'
+        +'<div class="sake-name">'+label+'</div>'
+        +'<div class="sake-detail">'+p.size+'&nbsp;&nbsp;&yen;'+p.price.toLocaleString('ja-JP')+' / 本</div>'
+        +(p.note?'<div class="sake-item-note">'+p.note+'</div>':'')
+        +(!p.inStock?'<span class="sold-badge">完売</span>':'')
+        +'<div class="qty-control">'
+        +'<button class="qty-btn" onclick="chQty(this,-1)">\uFF0D</button>'
+        +'<div class="qty-num">0</div>'
+        +'<button class="qty-btn" onclick="chQty(this,1)">\uFF0B</button>'
+        +'</div></div>'
+        +'<div class="sake-right">'
+        +'<div class="sake-price" data-unit="'+p.price+'">&yen;0</div>'
+        +'</div></div>';
+    });
+  });
+  document.getElementById('sake-list').innerHTML=h;
+  updateTotal();
+}
+
+function chQty(btn,d){
+  const qEl=btn.parentElement.querySelector('.qty-num');
+  let q=parseInt(qEl.textContent)+d;
+  if(q<0)q=0;
+  qEl.textContent=q;
+  const pEl=btn.closest('.sake-item').querySelector('.sake-price');
+  pEl.textContent=q>0?'\u00A5'+(parseInt(pEl.dataset.unit)*q).toLocaleString('ja-JP'):'\u00A50';
+  updateTotal();
+}
+function updateTotal(){
+  let t=0;
+  document.querySelectorAll('.sake-price[data-unit]').forEach(el=>{
+    t+=parseInt(el.dataset.unit)*parseInt(el.closest('.sake-item').querySelector('.qty-num').textContent);
+  });
+  document.getElementById('total-display').textContent=t.toLocaleString('ja-JP')+'\u5186';
+}
+
+async function handleSubmit(){
+  const name=document.getElementById('name').value.trim();
+  const postal=document.getElementById('postal').value.trim();
+  const addr=document.getElementById('address').value.trim();
+  const addr2=document.getElementById('address2').value.trim();
+  const tel=document.getElementById('tel').value.trim();
+  const note=document.getElementById('note').value.trim();
+  const hasItem=[...document.querySelectorAll('.qty-num')].some(e=>parseInt(e.textContent)>0);
+  if(!name){alert('お名前をご入力ください。');return;}
+  if(!postal){alert('郵便番号をご入力ください。');return;}
+  if(!addr){alert('ご住所をご入力ください。');return;}
+  if(!tel){alert('電話番号をご入力ください。');return;}
+  if(!hasItem){alert('商品を1本以上選択してください。');return;}
+  const lines=[];
+  document.querySelectorAll('.sake-item').forEach(el=>{
+    const q=parseInt(el.querySelector('.qty-num').textContent);
+    if(q>0){const p=prods.find(x=>x.id===parseInt(el.dataset.id));if(p){const lbl=p.name?(p.group+' '+p.name+' '+p.size):(p.group+' '+p.size);lines.push(lbl+' x'+q+'本 = '+(p.price*q).toLocaleString('ja-JP')+'円');}}
+  });
+  const orderText=lines.join('\n');
+  const total=document.getElementById('total-display').textContent;
+  const fullAddr=addr+(addr2?' '+addr2:'');
+  const fsUrl=localStorage.getItem(FS_KEY)||'';
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='送信中...';
+  if(!fsUrl){
+    const body=encodeURIComponent('【お申し込み内容】\n\nお名前：'+name+'\n郵便番号：'+postal+'\nご住所：'+fullAddr+'\n電話番号：'+tel+'\n\n【ご注文商品】\n'+orderText+'\n\n商品合計：'+total+'\n\n【備考】\n'+(note||'なし'));
+    window.location.href='mailto:syudo.t@po.minc.ne.jp?subject='+encodeURIComponent('焼酎お申し込み：'+name+'様')+'&body='+body;
+    btn.disabled=false;btn.innerHTML='申し込みを送信する<small>※後ほど振込金額・振込先をご連絡します</small>';
+    document.getElementById('done-modal').classList.add('show');return;
+  }
+  try{
+    const res=await fetch(fsUrl,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({お名前:name,郵便番号:postal,ご住所:fullAddr,電話番号:tel,ご注文商品:orderText,商品合計:total,備考:note||'なし'})});
+    if(res.ok)document.getElementById('done-modal').classList.add('show');
+    else alert('送信に失敗しました。時間をおいてお試しください。');
+  }catch(e){alert('送信に失敗しました。インターネット接続をご確認ください。');}
+  btn.disabled=false;btn.innerHTML='申し込みを送信する<small>※後ほど振込金額・振込先をご連絡します</small>';
+}
+
+function openPw(){document.getElementById('pw-input').value='';document.getElementById('pw-err').textContent='';document.getElementById('pw-overlay').classList.add('show');setTimeout(()=>document.getElementById('pw-input').focus(),150);}
+function closePw(){document.getElementById('pw-overlay').classList.remove('show');}
+function checkPw(){if(document.getElementById('pw-input').value===getPw()){closePw();openAdmin();}else{document.getElementById('pw-err').textContent='パスワードが違います';document.getElementById('pw-input').value='';document.getElementById('pw-input').focus();}}
+function changePw(){const v=document.getElementById('pw-new').value.trim();if(!v){alert('新しいパスワードを入力してください。');return;}localStorage.setItem(ADMIN_PW_KEY,v);document.getElementById('pw-new').value='';alert('パスワードを変更しました。');}
+
+function openAdmin(){const url=localStorage.getItem(FS_KEY)||'';document.getElementById('fs-input').value=url;renderAdminList();document.getElementById('admin-overlay').classList.add('show');}
+function closeAdmin(){document.getElementById('admin-overlay').classList.remove('show');}
+function saveFs(){const url=document.getElementById('fs-input').value.trim();localStorage.setItem(FS_KEY,url);alert(url?'保存しました！':'URLが空です。');}
+
+function renderAdminList(){
+  const groups=[...new Set(prods.map(p=>p.group))];
+  let h='';
+  groups.forEach(g=>{
+    h+='<div class="admin-gl">'+g+'</div>';
+    prods.filter(p=>p.group===g).forEach(p=>{
+      const lbl=p.name?(p.name+' / '+p.size):p.size;
+      h+='<div class="admin-item"><div class="admin-iinfo"><div class="admin-iname">'+lbl+'</div>'+(p.note?'<div class="admin-isub">'+p.note+'</div>':'')+'</div><div class="admin-iprice">&yen;'+p.price.toLocaleString('ja-JP')+'</div><div class="admin-ibtns"><button class="a-btn '+(p.inStock?'stock':'soldout')+'" onclick="toggleStock('+p.id+')">'+(p.inStock?'在庫◎':'完売')+'</button><button class="a-btn edit" onclick="openEdit('+p.id+')">編集</button><button class="a-btn del" onclick="delProd('+p.id+')">削除</button></div></div>';
+    });
+  });
+  document.getElementById('admin-list').innerHTML=h;
+}
+function toggleStock(id){const p=prods.find(x=>x.id===id);if(p){p.inStock=!p.inStock;save();renderForm();renderAdminList();}}
+function delProd(id){if(!confirm('この商品を削除しますか？'))return;prods=prods.filter(p=>p.id!==id);save();renderForm();renderAdminList();}
+
+function openEdit(id){
+  editingId=id;const p=id?prods.find(x=>x.id===id):null;
+  document.getElementById('edit-title').textContent=id?'商品を編集':'商品を追加';
+  document.getElementById('eg').value=p?p.group:'';
+  document.getElementById('en').value=p?p.name:'';
+  document.getElementById('es').value=p?p.size:'';
+  document.getElementById('ep').value=p?p.price:'';
+  document.getElementById('em').value=p?p.note:'';
+  document.getElementById('ei').checked=p?p.inStock:true;
+  document.getElementById('eg-dl').innerHTML=[...new Set(prods.map(x=>x.group))].map(g=>'<option value="'+g+'">').join('');
+  document.getElementById('edit-overlay').classList.add('show');
+}
+function closeEdit(){document.getElementById('edit-overlay').classList.remove('show');}
+function saveProd(){
+  const g=document.getElementById('eg').value.trim();const n=document.getElementById('en').value.trim();
+  const s=document.getElementById('es').value.trim();const pr=parseInt(document.getElementById('ep').value);
+  const m=document.getElementById('em').value.trim();const st=document.getElementById('ei').checked;
+  if(!g){alert('グループ名を入力してください。');return;}
+  if(!s){alert('容量を入力してください。');return;}
+  if(!pr||isNaN(pr)){alert('価格を入力してください。');return;}
+  if(editingId){const p=prods.find(x=>x.id===editingId);if(p){p.group=g;p.name=n;p.size=s;p.price=pr;p.note=m;p.inStock=st;}}
+  else{const newId=prods.length>0?Math.max(...prods.map(p=>p.id))+1:1;prods.push({id:newId,group:g,name:n,size:s,price:pr,note:m,inStock:st});}
+  save();renderForm();renderAdminList();closeEdit();
+}
+
+function fmtPostal(input){let v=input.value.replace(/[^0-9]/g,'');if(v.length>3)v=v.slice(0,3)+'-'+v.slice(3,7);input.value=v;}
+
+(async () => {
+  await load();
+  renderForm();
+})();
+</script>
+</body>
+</html>
