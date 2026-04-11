@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商品案内｜鶴田酒店</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#c8dfff;--bg2:#ddeeff;--navy:#000099;--orange:#e86400;
+      --red:#cc0000;--text:#1a2a5a;--border:#88b8ee;
+      --white:#f4f9ff;--card:#ffffff;--muted:#4a6080;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;}
+    body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,rgba(0,80,200,0.12) 1px,transparent 1px);background-size:20px 20px;pointer-events:none;z-index:0;}
+    .page-wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 0 100px;}
+
+    .header{background:linear-gradient(180deg,var(--navy) 0%,#0033aa 100%);padding:28px 20px 22px;text-align:center;position:relative;}
+    .header::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(255,255,255,0.03) 8px,rgba(255,255,255,0.03) 9px);}
+    .header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),#ffaa44,var(--orange));}
+    .header-label{font-size:10px;letter-spacing:0.35em;color:rgba(255,255,255,0.6);margin-bottom:8px;position:relative;}
+    .header-title{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:700;color:#fff;line-height:1.4;letter-spacing:0.05em;position:relative;}
+    .header-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:6px;letter-spacing:0.1em;position:relative;}
+
+    .nav{position:sticky;top:0;z-index:50;background:rgba(0,0,153,0.95);backdrop-filter:blur(8px);border-bottom:2px solid var(--orange);overflow-x:auto;scrollbar-width:none;}
+    .nav::-webkit-scrollbar{display:none;}
+    .nav-inner{display:inline-flex;min-width:100%;}
+    .nav-btn{background:none;border:none;color:rgba(255,255,255,0.6);font-family:'Noto Sans JP',sans-serif;font-size:12px;padding:11px 13px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
+    .nav-btn.active{color:#fff;border-bottom-color:var(--orange);}
+
+    .note-box{background:rgba(255,255,255,0.7);border-left:4px solid var(--orange);border-radius:0 8px 8px 0;padding:12px 14px;font-size:12px;color:var(--text);line-height:1.8;margin:16px 14px 0;}
+    .note-box strong{color:var(--red);}
+
+    .card{background:var(--card);margin:14px 14px 0;border-radius:12px;border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 12px rgba(0,50,150,0.1);}
+    .card-head{background:var(--navy);padding:12px 18px;display:flex;align-items:center;gap:10px;}
+    .card-head-bar{width:5px;height:18px;background:var(--orange);border-radius:3px;flex-shrink:0;}
+    .card-head-title{font-family:'Noto Serif JP',serif;font-size:14px;color:#fff;letter-spacing:0.08em;}
+    .card-head-sub{font-size:10px;color:rgba(255,255,255,0.45);margin-top:2px;}
+
+    .prod-item{border-bottom:1px solid #ddeeff;overflow:hidden;}
+    .prod-item:last-child{border-bottom:none;}
+    .prod-item.sold-out{opacity:0.55;}
+    .prod-img{width:100%;height:auto;display:block;background:#ddeeff;}
+    .prod-body{padding:14px 16px;}
+    .badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+    .badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:500;}
+    .badge-sold{background:#ddd;color:#777;border:1px solid #bbb;}
+    .badge-limit{background:rgba(204,0,0,0.08);color:var(--red);border:1px solid rgba(204,0,0,0.2);}
+    .badge-new{background:rgba(0,100,0,0.08);color:#005000;border:1px solid rgba(0,100,0,0.2);}
+    .badge-rare{background:rgba(184,136,42,0.1);color:#7a5c10;border:1px solid rgba(184,136,42,0.25);}
+    .prod-name{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:2px;line-height:1.3;}
+    .prod-kura{font-size:11px;color:var(--muted);margin-bottom:9px;letter-spacing:0.05em;}
+    .prod-desc{font-size:12px;color:var(--text);line-height:1.85;margin-bottom:12px;}
+    .prices{background:var(--bg2);border-radius:8px;border:1px solid var(--border);overflow:hidden;}
+    .price-row{display:flex;justify-content:space-between;align-items:center;padding:8px 13px;border-bottom:1px solid rgba(136,184,238,0.4);}
+    .price-row:last-child{border-bottom:none;}
+    .price-size{font-size:12px;color:var(--muted);}
+    .price-val{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:600;color:var(--orange);}
+
+    .orig-card{background:linear-gradient(160deg,var(--navy) 0%,#002288 100%);margin:14px 14px 0;border-radius:12px;border:2px solid var(--orange);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,100,0.2);}
+    .orig-head{padding:18px 18px 12px;border-bottom:1px solid rgba(232,100,0,0.2);}
+    .orig-ruby{font-size:10px;color:var(--orange);letter-spacing:0.3em;margin-bottom:5px;font-family:'Noto Serif JP',serif;}
+    .orig-name{font-family:'Noto Serif JP',serif;font-size:21px;font-weight:700;color:#fff;line-height:1.4;}
+    .orig-tag{font-size:11px;color:rgba(255,255,255,0.45);margin-top:5px;line-height:1.7;}
+    .orig-item{padding:13px 18px;border-bottom:1px solid rgba(232,100,0,0.1);}
+    .orig-item:last-child{border-bottom:none;}
+    .orig-img{width:100%;height:auto;display:block;margin-bottom:10px;border-radius:6px;}
+    .orig-iname{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:600;color:#d4a84b;margin-bottom:3px;}
+    .orig-idesc{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:9px;line-height:1.7;}
+    .orig-prices{display:flex;flex-wrap:wrap;gap:7px;}
+    .orig-ptag{background:rgba(232,100,0,0.15);border:1px solid rgba(232,100,0,0.3);border-radius:7px;padding:6px 12px;text-align:center;}
+    .orig-psize{font-size:10px;color:rgba(255,255,255,0.4);display:block;margin-bottom:2px;}
+    .orig-pval{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:600;color:var(--orange);}
+
+    .pair-item{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid #ddeeff;font-size:13px;color:var(--text);}
+    .pair-item:last-child{border-bottom:none;}
+    .pair-icon{font-size:22px;width:32px;text-align:center;flex-shrink:0;}
+    .pair-foot{padding:12px 16px;background:var(--bg2);font-size:12px;color:var(--muted);line-height:1.8;border-top:1px solid var(--border);}
+
+    .footer{text-align:center;padding:20px 16px 16px;font-size:11px;color:var(--muted);line-height:2;}
+    .admin-link{margin-top:10px;display:inline-block;font-size:10px;color:rgba(0,0,153,0.4);text-decoration:none;border:1px solid rgba(0,0,153,0.15);border-radius:6px;padding:4px 12px;}
+
+    .cta-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(0,0,153,0.97);backdrop-filter:blur(10px);border-top:2px solid var(--orange);padding:12px 14px;display:flex;gap:10px;}
+    .cta-btn{flex:1;padding:13px;border-radius:9px;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:600;letter-spacing:0.08em;cursor:pointer;text-align:center;text-decoration:none;display:block;}
+    .cta-primary{background:var(--orange);border:none;color:#fff;}
+    .cta-secondary{background:none;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);font-size:12px;display:flex;align-items:center;justify-content:center;}
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="header">
+    <div class="header-label">PRODUCT GUIDE</div>
+    <div class="header-title">商品案内</div>
+    <div class="header-sub">鶴田酒店｜地酒・本格焼酎の専門店</div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <button class="nav-btn active" onclick="navTo('sec-original',this)">当店オリジナル</button>
+      <button class="nav-btn" onclick="navTo('sec-kokubun',this)">国分酒造</button>
+      <button class="nav-btn" onclick="navTo('sec-premire',this)">プレミア</button>
+      <button class="nav-btn" onclick="navTo('sec-shirotama',this)">白玉酒造</button>
+      <button class="nav-btn" onclick="navTo('sec-others',this)">その他</button>
+      <button class="nav-btn" onclick="navTo('sec-limited',this)">鹿児島限定</button>
+      <button class="nav-btn" onclick="navTo('sec-pairing',this)">おつまみ提案</button>
+    </div>
+  </nav>
+
+  <div class="note-box">全て<strong>税込価格</strong>です。商品によっては入手困難・仕込中のものもあります。他にも色々取り揃えておりますのでお問い合わせください。</div>
+
+  <div id="sec-original"></div>
+  <div id="sec-kokubun"></div>
+  <div id="sec-premire"></div>
+  <div id="sec-shirotama"></div>
+  <div id="sec-others"></div>
+  <div id="sec-limited"></div>
+
+  <div id="sec-pairing">
+    <div class="card">
+      <div class="card-head"><div class="card-head-bar"></div><div>
+        <div class="card-head-title">五石橋のおつまみ提案</div>
+        <div class="card-head-sub">ロック・水割用のフルーティな味わいに合わせて</div>
+      </div></div>
+      <div class="pair-item"><span class="pair-icon">🍗</span><div>鶏のからあげ</div></div>
+      <div class="pair-item"><span class="pair-icon">🍢</span><div>さつま揚げ</div></div>
+      <div class="pair-item"><span class="pair-icon">🥩</span><div>黒豚のスペリアブ</div></div>
+      <div class="pair-item"><span class="pair-icon">🔥</span><div>炭火もも焼き</div></div>
+      <div class="pair-foot">たっぷりの氷・冷えた炭酸・レモンまたはライムで割ると、さらに旨い！フルーティーな「五石橋 ロック・水割用」ならではの美味しさです。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    ご不明な点はInstagramのDMまたは<br>
+    メール（syudo.t@po.minc.ne.jp）にてお問い合わせください。<br><br>
+    &copy; 鶴田酒店
+    <br><a class="admin-link" href="admin.html">管理画面</a>
+  </div>
+
+</div>
+
+<div class="cta-bar">
+  <a class="cta-btn cta-secondary" href="https://www.minc.ne.jp/~syudo.t/">トップへ</a>
+  <a class="cta-btn cta-primary" href="order-form.html">ご注文はこちら →</a>
+</div>
+
+<script>
+const MASTER_DEFAULTS = [
+  {id:1,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'お湯割り用',         kura:'', desc:'芋臭さをおさえたふくよかな旨味',                               img:'', sizes:[{s:'1800ml',p:2370}],                              badges:[],             note:'芋臭さをおさえたふくよかな旨味', inStock:true},
+  {id:2,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'ロック・水割り専用',  kura:'', desc:'フルーティでスッキリした味わいが大好評',                         img:'', sizes:[{s:'1800ml',p:2370},{s:'900ml',p:1280},{s:'720ml',p:1640}], badges:[],             note:'フルーティでスッキリした味わい大好評', inStock:true},
+  {id:3,  cat:'original-non',  group:'飲ん日和（当店オリジナル）',         name:'お湯割り・水割り用', kura:'', desc:'昔ながらの黒こうじ仕込み',                                       img:'', sizes:[{s:'1800ml',p:2050}],                              badges:[],             note:'昔ながらの黒こうじ仕込み',           inStock:true},
+  {id:4,  cat:'kokubun', group:'伊佐美（国分酒造）',                name:'', kura:'国分酒造', desc:'口に含むと軽やかな甘味、果実感がバランス良く広がります。2026年1月15日より発売。',  img:'img/IMG_2025-03-04-13-08-48-7461.jpg', sizes:[{s:'1800ml',p:3500},{s:'720ml',p:1750}],  badges:['2026年1月発売','販売数少'], note:'軽やかな甘味と果実感', inStock:true},
+  {id:5,  cat:'kokubun', group:'MUGEN白波 お湯割用（国分酒造）',   name:'', kura:'国分酒造', desc:'仕込み水に霧島山系の伏流水を使用。黄こうじ独特の香りと旨味を強調し、酸味の少ない味に仕上げています。', img:'', sizes:[{s:'1800ml',p:2590},{s:'720ml',p:1490}],  badges:[], note:'黄こうじ独特の香りと旨味', inStock:true},
+  {id:6,  cat:'kokubun', group:'大正の一滴（国分酒造）',           name:'', kura:'国分酒造', desc:'老麹造りの芋焼酎を再現。ラベルは焼酎粕を再利用した和紙。角のとれたまろみのある味わい。', img:'img/dezitaisyou.jpg', sizes:[{s:'1800ml',p:2420},{s:'720ml',p:1260}], badges:[], note:'老麹造り・焼酎粕の和紙ラベル', inStock:true},
+  {id:7,  cat:'kokubun', group:'芋（国分酒造）',                   name:'', kura:'国分酒造', desc:'その昔、芋だけで造った焼酎を復活。アルコール分26度。芋こうじ芋100%。', img:'', sizes:[{s:'1800ml',p:2680},{s:'720ml',p:1360}], badges:[], note:'芋こうじ芋100%・26度', inStock:true},
+  {id:8,  cat:'kokubun', group:'カイジュズ パッション（国分酒造）', name:'', kura:'国分酒造', desc:'詳細はお問い合わせください。', img:'img/IMG_2023-06-03-09-57-06-391%20(1)11.jpg', sizes:[], badges:[], note:'', inStock:true},
+  {id:9,  cat:'premire', group:'だいやめ（濱田酒造）', name:'', kura:'濱田酒造', desc:'ライチのように香る芋焼酎。瑞々しいライチを思わせる甘い香りが膨らみます。', img:'img/ISAMI11.JPG', sizes:[{s:'1800ml',p:2670},{s:'900ml',p:1410}], badges:[], note:'ライチを思わせる甘い香り', inStock:true},
+  {id:10, cat:'shirotama', group:'ちご桜（白金酒造）',           name:'', kura:'白金酒造', desc:'吟醸酵母仕込み。吟醸香が引き立ち、華やかでさわやかな味わいが特徴。', img:'', sizes:[{s:'1800ml',p:2120},{s:'900ml',p:1160}], badges:[], note:'吟醸酵母仕込み・華やかな香り', inStock:true},
+  {id:11, cat:'shirotama', group:'白金吟酒（白金酒造）',         name:'', kura:'白金酒造', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
+  {id:12, cat:'others', group:'女王蜂（白玉酒造）',              name:'', kura:'白玉酒造', desc:'魔王の蔵元の焼酎。米焼酎をベースに芋焼酎をブレンド。まろみが調和した風味豊かな焼酎。', img:'img/IMG_2023-06-03-09-58-45-703%20(1).jpg', sizes:[{s:'1800ml',p:2210}], badges:[], note:'米焼酎x芋焼酎ブレンド', inStock:true},
+  {id:13, cat:'others', group:'天誅（てんちゅう）',              name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/DSC_05161.png', sizes:[], badges:[], note:'', inStock:true},
+  {id:14, cat:'others', group:'三岳（三岳酒造）',                name:'', kura:'三岳酒造', desc:'世界自然遺産登録の屋久島の蔵元で造られました。ぬる燗・お湯割りでお楽しみください。', img:'img/DSC_07681.png', sizes:[{s:'1800ml',p:2570},{s:'900ml',p:1420}], badges:[], note:'世界自然遺産・屋久島の蔵元', inStock:true},
+  {id:15, cat:'others', group:'くじら（大海酒造）',              name:'', kura:'大海酒造', desc:'黄金千貫・白こうじ・常圧蒸留で造った芋焼酎のスタンダード。鹿児島県垂水の「寿鶴」を使用。', img:'img/DSC_07691.png', sizes:[{s:'1800ml',p:2920}], badges:[], note:'鹿児島県垂水・ぬる燗・お湯割りで', inStock:true},
+  {id:16, cat:'others', group:'別撰MUGEN白波',                   name:'', kura:'薩摩酒造', desc:'三つの蒸留所からそれぞれの厳選された原酒を最適な割合でブレンド。お湯割専用追求。', img:'', sizes:[{s:'1800ml',p:2750},{s:'900ml',p:1430}], badges:[], note:'3蒸留所ブレンド', inStock:true},
+  {id:17, cat:'others', group:'麦・芋ブレンド長期貯蔵（魔王蔵元）', name:'', kura:'白玉酒造', desc:'麦焼酎の旨味と芋焼酎のふくよかな味わいがバランス良くブレンドされたまろやかな逸品。★魔王の蔵元。', img:'img/DSC_04312.png', sizes:[{s:'1800ml',p:2320}], badges:[], note:'まろやかな逸品', inStock:true},
+  {id:18, cat:'others', group:'さつま島美人',                    name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/SSCN10081.JPG', sizes:[], badges:[], note:'', inStock:true},
+  {id:19, cat:'others', group:'さつま黒こうじ（佐藤酒造）',      name:'', kura:'佐藤酒造', desc:'「佐藤」で名を広めている佐藤酒造の焼酎。なかなか手に入りにくい商品。', img:'', sizes:[{s:'1800ml',p:2990}], badges:[], note:'「佐藤」蔵・入手困難', inStock:true},
+  {id:20, cat:'others', group:'元祖まぼろし',                    name:'', kura:'', desc:'創業当初から黒こうじ一筋。口当たりがよく、甘みのあるまろやかな味わいで非常に人気の高い芋焼酎。', img:'img/SSCN04761.JPG', sizes:[{s:'1800ml',p:2900},{s:'720ml',p:1860}], badges:['数量限定'], note:'黒こうじ一筋・まろやかな味わい', inStock:true},
+  {id:21, cat:'others', group:'さつまの梅酒（元老院）',           name:'', kura:'白玉酒造', desc:'魔王の蔵元が造った梅酒。まろやかな味わいはお食事のひと時を優雅にしてくれます。', img:'img/DSC_04302.png', sizes:[{s:'1800ml',p:1890},{s:'900ml',p:970}], badges:[], note:'魔王の蔵元・まろやかな梅酒', inStock:true},
+  {id:22, cat:'others', group:'甕 長期熟成',                     name:'', kura:'', desc:'5つの蔵元の芋焼酎をブレンドし、甕でじっくり季節を重ねた長期熟成の本格芋焼酎。化粧箱入り。', img:'img/SSCN05971.JPG', sizes:[{s:'1800ml',p:2670}], badges:['年3回限定','化粧箱入り'], note:'5蔵ブレンド・年3回限定', inStock:true},
+  {id:23, cat:'others', group:'れんと（奄美大島開運酒造）',       name:'', kura:'奄美大島開運酒造', desc:'奄美の最高峰「湯湾岳」の名水と黒糖がベース。名曲を聴かせて3か月以上熟成。', img:'', sizes:[{s:'1800ml',p:2200},{s:'900ml',p:1180}], badges:[], note:'奄美・黒糖ベース、名曲熟成3か月以上', inStock:true},
+  {id:24, cat:'others', group:'相良仲右衛門（相良酒造）',         name:'', kura:'相良酒造', desc:'黒こうじ造り・30度。創業者「仲右衛門」の名にちなんで命名。', img:'img/080830_165518.JPG', sizes:[{s:'1800ml',p:2490}], badges:[], note:'黒こうじ造り・30度', inStock:true},
+  {id:25, cat:'others', group:'復刻版 兵六（ひょうろく）',        name:'', kura:'', desc:'昭和の人気焼酎の復刻版。なつかしき昭和の味。販売店指定・数量限定販売ですのでお早めに。', img:'img/SSCN05991.JPG', sizes:[{s:'1800ml',p:2450}], badges:['販売店指定','数量限定'], note:'昭和の味 復刻版・限定販売', inStock:true},
+  {id:26, cat:'others', group:'流川（るかわ）',                   name:'', kura:'', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
+  {id:27, cat:'limited', group:'鬼武蔵（大口酒造）',              name:'', kura:'大口酒造 ※値上げ済', desc:'焼酎「伊佐錦」の大口酒造の鹿児島限定商品。貯蔵酒を吟味・厳選しブレンド。力強くも豊かな芋の味わいと甘く香り高い逸品。', img:'img/20260116_1019314191.JPG', sizes:[{s:'1800ml',p:4280},{s:'720ml',p:1830}], badges:['鹿児島限定'], note:'貯蔵酒厳選ブレンド', inStock:false},
+  {id:28, cat:'limited', group:'薩摩茶屋 鹿児島美人（村尾酒造）',name:'', kura:'村尾酒造 25度', desc:'史跡・薩摩藩公御茶屋跡にちなんで命名。原料は黄金千貫・白豊。黒こうじ甕壺仕込み。', img:'img/20251215_1548158321.JPG', sizes:[{s:'1800ml',p:2380}], badges:['鹿児島限定'], note:'黒こうじ甕壺仕込み・鹿児島限定', inStock:true},
+  {id:29, cat:'limited', group:'篤姫（鹿児島限定）',              name:'', kura:'', desc:'鹿児島県長島町の五つの蔵の結晶。「篤姫酵母」で仕込みました。', img:'', sizes:[{s:'1800ml',p:2000}], badges:['鹿児島限定'], note:'篤姫酵母・五つの蔵の結晶', inStock:true},
+  {id:30, cat:'limited', group:'鹿児島限定（相良酒造）',          name:'', kura:'相良酒造', desc:'昔ながらのクセのある芋焼酎。コガネセンガンを原料に白麹をブレンドして仕込みました。', img:'img/DSC_08701.png', sizes:[{s:'1800ml',p:2290}], badges:['鹿児島限定'], note:'白麹ブレンド・昔ながらの芋焼酎', inStock:true},
+  {id:31, cat:'limited', group:'しま安納（高崎酒造）',            name:'', kura:'高崎酒造', desc:'安納芋を原料とした芋焼酎。安納芋から引き出される甘味とふくよかな芋の香りが楽しめます。', img:'img/SSCN0152.JPG', sizes:[{s:'1800ml',p:2800}], badges:['鹿児島限定'], note:'安納芋使用・種子島産', inStock:true},
+  {id:32, cat:'limited', group:'紅芋 復刻版（昭和の味）',         name:'', kura:'', desc:'昭和の人気焼酎の復刻版。紅芋の華やかで上質な香りとなめらかな味わい。黒こうじ造り。', img:'img/SSCN09192.JPG', sizes:[{s:'1800ml',p:2270}], badges:['鹿児島限定','昭和の味 復刻版'], note:'紅芋・黒こうじ造り・限定販売', inStock:true},
+];
+async function getProds(){
+  const res = await fetch('master.json');
+  return await res.json();
+}
+
+async function renderAll(){
+  const prods = await getProds();
+
+const ORIG_GOEK_META = {ruby:'まぼろしの ごせっきょう', title:'幻の五石橋', tag:'当店だけのオリジナル焼酎。店主が割水・味・口当たり・デザイン等、全てにこだわった焼酎です。<br>平成7年の大水害で流出した甲突川の五大石橋を忘れないようにとの思いを込めて。'};
+const ORIG_NON_META  = {ruby:'のんびより', title:'飲ん日和', tag:'桜島の絵をラベルにし、まさに鹿児島をイメージした焼酎。黒こうじ造り。<br>「飲んびよい　燃えて色づく　桜島」'};
+
+const CAT_ORDER = ['original-goek','original-non','kokubun','premire','shirotama','others','limited'];
+const CAT_SEC   = {'original-goek':'sec-original','original-non':'sec-original','kokubun':'sec-kokubun','premire':'sec-premire','shirotama':'sec-shirotama','others':'sec-others','limited':'sec-limited'};
+const CAT_LABEL = {'kokubun':'国分酒造','premire':'プレミア','shirotama':'白玉酒造','others':'その他の銘柄','limited':'鹿児島限定商品'};
+
+function badgeCls(b){ return b.includes('完売')?'badge-sold':b.includes('限定')||b.includes('限')?'badge-limit':b.includes('発売')?'badge-new':'badge-rare'; }
+
+  // Clear sections
+  document.getElementById('sec-original').innerHTML = '';
+  ['kokubun','premire','shirotama','others','limited'].forEach(cat => { document.getElementById('sec-'+cat).innerHTML = ''; });
+
+  // オリジナル
+  ['original-goek','original-non'].forEach(cat => {
+    const meta = cat==='original-goek' ? ORIG_GOEK_META : ORIG_NON_META;
+    const items = prods.filter(p => p.cat === cat);
+    if(!items.length) return;
+    const div = document.createElement('div');
+    div.className = 'orig-card';
+    div.innerHTML = `<div class="orig-head">
+      <div class="orig-ruby">${meta.ruby}</div>
+      <div class="orig-name">${meta.title}</div>
+      <div class="orig-tag">${meta.tag}</div>
+    </div>` + items.map(p => {
+      const sc = p.inStock ? '' : ' sold-out';
+      const img = p.img ? `<img class="orig-img" src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">` : '';
+      const prices = (p.sizes||[]).map(({s,p:price}) => `<div class="orig-ptag"><span class="orig-psize">${s}</span><span class="orig-pval">¥${price.toLocaleString('ja-JP')}</span></div>`).join('');
+      return `<div class="orig-item${sc}">${img}<div class="orig-iname">${p.name||meta.title}</div>${p.desc?`<div class="orig-idesc">${p.desc}</div>`:''}<div class="orig-prices">${prices}</div></div>`;
+    }).join('');
+    document.getElementById('sec-original').appendChild(div);
+    document.getElementById('sec-original').style.marginTop = '14px';
+  });
+
+  // 通常カテゴリ
+  ['kokubun','premire','shirotama','others','limited'].forEach(cat => {
+    const items = prods.filter(p => p.cat === cat);
+    if(!items.length) return;
+    const card = document.createElement('div');
+    card.className = 'card';
+    const sub = cat==='limited' ? '<div class="card-head-sub">鹿児島でしか手に入らない希少な銘柄</div>' : '';
+    card.innerHTML = `<div class="card-head"><div class="card-head-bar"></div><div><div class="card-head-title">${CAT_LABEL[cat]}</div>${sub}</div></div>`;
+    items.forEach(p => {
+      const sc = p.inStock ? '' : ' sold-out';
+      const bdgs = (!p.inStock?['<span class="badge badge-sold">完売</span>']:[]).concat((p.badges||[]).map(b=>`<span class="badge ${badgeCls(b)}">${b}</span>`)).join('');
+      const img = p.img ? `<img class="prod-img" src="${p.img}" alt="${p.group}" onerror="this.style.display='none'">` : '';
+      const prices = (p.sizes||[]).map(({s,p:price}) => `<div class="price-row"><span class="price-size">${s}</span><span class="price-val">¥${price.toLocaleString('ja-JP')}</span></div>`).join('');
+      const div = document.createElement('div');
+      div.className = `prod-item${sc}`;
+      div.innerHTML = `${img}<div class="prod-body">${bdgs?`<div class="badges">${bdgs}</div>`:''}<div class="prod-name">${p.group}</div>${p.kura?`<div class="prod-kura">${p.kura}</div>`:''}<div class="prod-desc">${p.desc||''}</div>${prices?`<div class="prices">${prices}</div>`:''}</div>`;
+      card.appendChild(div);
+    });
+    const secEl = document.getElementById('sec-'+cat);
+    secEl.appendChild(card);
+    secEl.style.marginTop = '14px';
+  });
+}
+
+function navTo(id, btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+const SECS=['sec-original','sec-kokubun','sec-premire','sec-shirotama','sec-others','sec-limited','sec-pairing'];
+window.addEventListener('scroll',()=>{
+  let cur=0;
+  SECS.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=90)cur=i;});
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active',i===cur));
+},{passive:true});
+
+
+renderAll();
+</script>
+</body>
+</html>
