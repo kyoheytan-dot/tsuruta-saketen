@@ -489,7 +489,7 @@ function saveProd(){
 function fmtPostal(input){let v=input.value.replace(/[^0-9]/g,'');if(v.length>3)v=v.slice(0,3)+'-'+v.slice(3,7);input.value=v;}
 
 (async () => {
-  await load();
+  prods = await getProds();
   renderForm();
 })();
 </script>
