@@ -100,8 +100,8 @@
     <div class="nav-inner">
       <button class="nav-btn active" onclick="navTo('sec-original',this)">当店オリジナル</button>
       <button class="nav-btn" onclick="navTo('sec-kokubun',this)">国分酒造</button>
-      <button class="nav-btn" onclick="navTo('sec-hamada',this)">濱田酒造</button>
-      <button class="nav-btn" onclick="navTo('sec-shirogane',this)">白金酒造</button>
+      <button class="nav-btn" onclick="navTo('sec-premire',this)">プレミア</button>
+      <button class="nav-btn" onclick="navTo('sec-shirotama',this)">白玉酒造</button>
       <button class="nav-btn" onclick="navTo('sec-others',this)">その他</button>
       <button class="nav-btn" onclick="navTo('sec-limited',this)">鹿児島限定</button>
       <button class="nav-btn" onclick="navTo('sec-pairing',this)">おつまみ提案</button>
@@ -112,8 +112,8 @@
 
   <div id="sec-original"></div>
   <div id="sec-kokubun"></div>
-  <div id="sec-hamada"></div>
-  <div id="sec-shirogane"></div>
+  <div id="sec-premire"></div>
+  <div id="sec-shirotama"></div>
   <div id="sec-others"></div>
   <div id="sec-limited"></div>
 
@@ -146,62 +146,60 @@
 </div>
 
 <script>
-const DATA_KEY = 'sake_master';
-
 const MASTER_DEFAULTS = [
-  {id:1,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'お湯割り用',         kura:'', desc:'芋臭さをおさえたふくよかな旨味',               img:'img/gosekkyo.jpg', sizes:[{s:'1800ml',p:2370}],                              badges:[],             note:'', inStock:true},
-  {id:2,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'ロック・水割り専用',  kura:'', desc:'フルーティでスッキリした味わいが大好評',           img:'img/gosekkyo2.jpg', sizes:[{s:'1800ml',p:2370},{s:'900ml',p:1280},{s:'720ml',p:1640}], badges:[],         note:'', inStock:true},
-  {id:3,  cat:'original-non',  group:'飲ん日和（当店オリジナル）',         name:'お湯割り・水割り用', kura:'', desc:'昔ながらの黒こうじ仕込み',                         img:'img/gosekkyo3.jpg', sizes:[{s:'1800ml',p:2050}],                              badges:[],             note:'', inStock:true},
-  {id:4,  cat:'kokubun', group:'伊佐美（国分酒造）',                name:'', kura:'国分酒造', desc:'口に含むと軽やかな甘味、果実感がバランス良く広がります。2026年1月15日より発売。', img:'img/IMG_2025-03-04-13-08-48-7461.jpg', sizes:[{s:'1800ml',p:3500},{s:'720ml',p:1750}], badges:['2026年1月発売','販売数少'], note:'', inStock:true},
-  {id:5,  cat:'kokubun', group:'MUGEN白波 お湯割用（国分酒造）',   name:'', kura:'国分酒造', desc:'仕込み水に霧島山系の伏流水を使用。黄こうじ独特の香りと旨味を強調し、酸味の少ない味に仕上げています。', img:'', sizes:[{s:'1800ml',p:2590},{s:'720ml',p:1490}], badges:[], note:'', inStock:true},
-  {id:6,  cat:'kokubun', group:'大正の一滴（国分酒造）',           name:'', kura:'国分酒造', desc:'老麹造りの芋焼酎を再現。ラベルは焼酎粕を再利用した和紙。角のとれたまろみのある味わい。', img:'img/dezitaisyou.jpg', sizes:[{s:'1800ml',p:2420},{s:'720ml',p:1260}], badges:[], note:'', inStock:true},
-  {id:7,  cat:'kokubun', group:'芋（国分酒造）',                   name:'', kura:'国分酒造', desc:'その昔、芋だけで造った焼酎を復活。アルコール分26度。芋こうじ芋100%。', img:'', sizes:[{s:'1800ml',p:2680},{s:'720ml',p:1360}], badges:[], note:'', inStock:true},
+  {id:1,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'お湯割り用',         kura:'', desc:'芋臭さをおさえたふくよかな旨味',                               img:'', sizes:[{s:'1800ml',p:2370}],                              badges:[],             note:'芋臭さをおさえたふくよかな旨味', inStock:true},
+  {id:2,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'ロック・水割り専用',  kura:'', desc:'フルーティでスッキリした味わいが大好評',                         img:'', sizes:[{s:'1800ml',p:2370},{s:'900ml',p:1280},{s:'720ml',p:1640}], badges:[],             note:'フルーティでスッキリした味わい大好評', inStock:true},
+  {id:3,  cat:'original-non',  group:'飲ん日和（当店オリジナル）',         name:'お湯割り・水割り用', kura:'', desc:'昔ながらの黒こうじ仕込み',                                       img:'', sizes:[{s:'1800ml',p:2050}],                              badges:[],             note:'昔ながらの黒こうじ仕込み',           inStock:true},
+  {id:4,  cat:'kokubun', group:'伊佐美（国分酒造）',                name:'', kura:'国分酒造', desc:'口に含むと軽やかな甘味、果実感がバランス良く広がります。2026年1月15日より発売。',  img:'img/IMG_2025-03-04-13-08-48-7461.jpg', sizes:[{s:'1800ml',p:3500},{s:'720ml',p:1750}],  badges:['2026年1月発売','販売数少'], note:'軽やかな甘味と果実感', inStock:true},
+  {id:5,  cat:'kokubun', group:'MUGEN白波 お湯割用（国分酒造）',   name:'', kura:'国分酒造', desc:'仕込み水に霧島山系の伏流水を使用。黄こうじ独特の香りと旨味を強調し、酸味の少ない味に仕上げています。', img:'', sizes:[{s:'1800ml',p:2590},{s:'720ml',p:1490}],  badges:[], note:'黄こうじ独特の香りと旨味', inStock:true},
+  {id:6,  cat:'kokubun', group:'大正の一滴（国分酒造）',           name:'', kura:'国分酒造', desc:'老麹造りの芋焼酎を再現。ラベルは焼酎粕を再利用した和紙。角のとれたまろみのある味わい。', img:'img/dezitaisyou.jpg', sizes:[{s:'1800ml',p:2420},{s:'720ml',p:1260}], badges:[], note:'老麹造り・焼酎粕の和紙ラベル', inStock:true},
+  {id:7,  cat:'kokubun', group:'芋（国分酒造）',                   name:'', kura:'国分酒造', desc:'その昔、芋だけで造った焼酎を復活。アルコール分26度。芋こうじ芋100%。', img:'', sizes:[{s:'1800ml',p:2680},{s:'720ml',p:1360}], badges:[], note:'芋こうじ芋100%・26度', inStock:true},
   {id:8,  cat:'kokubun', group:'カイジュズ パッション（国分酒造）', name:'', kura:'国分酒造', desc:'詳細はお問い合わせください。', img:'img/IMG_2023-06-03-09-57-06-391%20(1)11.jpg', sizes:[], badges:[], note:'', inStock:true},
-  {id:9,  cat:'hamada', group:'だいやめ（濱田酒造）', name:'', kura:'濱田酒造', desc:'ライチのように香る芋焼酎。瑞々しいライチを思わせる甘い香りが膨らみます。', img:'img/ISAMI11.JPG', sizes:[{s:'1800ml',p:2670},{s:'900ml',p:1410}], badges:[], note:'', inStock:true},
-  {id:10, cat:'shirogane', group:'ちご桜（白金酒造）',  name:'', kura:'白金酒造', desc:'吟醸酵母仕込み。吟醸香が引き立ち、華やかでさわやかな味わいが特徴。', img:'', sizes:[{s:'1800ml',p:2120},{s:'900ml',p:1160}], badges:[], note:'', inStock:true},
-  {id:11, cat:'shirogane', group:'白金吟酒（白金酒造）',name:'', kura:'白金酒造', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
-  {id:12, cat:'others', group:'女王蜂（白玉酒造）',   name:'', kura:'白玉酒造', desc:'魔王の蔵元の焼酎。米焼酎をベースに芋焼酎をブレンド。まろみが調和した風味豊かな焼酎。', img:'img/IMG_2023-06-03-09-58-45-703%20(1).jpg', sizes:[{s:'1800ml',p:2210}], badges:[], note:'', inStock:true},
-  {id:13, cat:'others', group:'天誅（てんちゅう）',   name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/DSC_05161.png', sizes:[], badges:[], note:'', inStock:true},
-  {id:14, cat:'others', group:'三岳（三岳酒造）',     name:'', kura:'三岳酒造', desc:'世界自然遺産登録の屋久島の蔵元で造られました。ぬる燗・お湯割りでお楽しみください。', img:'img/DSC_07681.png', sizes:[{s:'1800ml',p:2570},{s:'900ml',p:1420}], badges:[], note:'', inStock:true},
-  {id:15, cat:'others', group:'くじら（大海酒造）',   name:'', kura:'大海酒造', desc:'黄金千貫・白こうじ・常圧蒸留で造った芋焼酎のスタンダード。鹿児島県垂水の「寿鶴」を使用。', img:'img/DSC_07691.png', sizes:[{s:'1800ml',p:2920}], badges:[], note:'', inStock:true},
-  {id:16, cat:'others', group:'別撰MUGEN白波',        name:'', kura:'薩摩酒造', desc:'三つの蒸留所からそれぞれの厳選された原酒を最適な割合でブレンド。お湯割専用追求。', img:'', sizes:[{s:'1800ml',p:2750},{s:'900ml',p:1430}], badges:[], note:'', inStock:true},
-  {id:17, cat:'others', group:'麦・芋ブレンド長期貯蔵（魔王蔵元）', name:'', kura:'白玉酒造', desc:'麦焼酎の旨味と芋焼酎のふくよかな味わいがバランス良くブレンドされたまろやかな逸品。★魔王の蔵元。', img:'img/DSC_04312.png', sizes:[{s:'1800ml',p:2320}], badges:[], note:'', inStock:true},
-  {id:18, cat:'others', group:'さつま島美人',          name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/SSCN10081.JPG', sizes:[], badges:[], note:'', inStock:true},
-  {id:19, cat:'others', group:'さつま黒こうじ（佐藤酒造）', name:'', kura:'佐藤酒造', desc:'「佐藤」で名を広めている佐藤酒造の焼酎。なかなか手に入りにくい商品。', img:'', sizes:[{s:'1800ml',p:2990}], badges:[], note:'', inStock:true},
-  {id:20, cat:'others', group:'元祖まぼろし',           name:'', kura:'', desc:'創業当初から黒こうじ一筋。口当たりがよく、甘みのあるまろやかな味わいで非常に人気の高い芋焼酎。', img:'img/SSCN04761.JPG', sizes:[{s:'1800ml',p:2900},{s:'720ml',p:1860}], badges:['数量限定'], note:'', inStock:true},
-  {id:21, cat:'others', group:'さつまの梅酒（元老院）', name:'', kura:'白玉酒造', desc:'魔王の蔵元が造った梅酒。まろやかな味わいはお食事のひと時を優雅にしてくれます。', img:'img/DSC_04302.png', sizes:[{s:'1800ml',p:1890},{s:'900ml',p:970}], badges:[], note:'', inStock:true},
-  {id:22, cat:'others', group:'甕 長期熟成',            name:'', kura:'', desc:'5つの蔵元の芋焼酎をブレンドし、甕でじっくり季節を重ねた長期熟成の本格芋焼酎。化粧箱入り。', img:'img/SSCN05971.JPG', sizes:[{s:'1800ml',p:2670}], badges:['年3回限定','化粧箱入り'], note:'', inStock:true},
-  {id:23, cat:'others', group:'れんと（奄美大島開運酒造）', name:'', kura:'奄美大島開運酒造', desc:'奄美の最高峰「湯湾岳」の名水と黒糖がベース。名曲を聴かせて3か月以上熟成。', img:'', sizes:[{s:'1800ml',p:2200},{s:'900ml',p:1180}], badges:[], note:'', inStock:true},
-  {id:24, cat:'others', group:'相良仲右衛門（相良酒造）', name:'', kura:'相良酒造', desc:'黒こうじ造り・30度。創業者「仲右衛門」の名にちなんで命名。', img:'img/080830_165518.JPG', sizes:[{s:'1800ml',p:2490}], badges:[], note:'', inStock:true},
-  {id:25, cat:'others', group:'復刻版 兵六（ひょうろく）', name:'', kura:'', desc:'昭和の人気焼酎の復刻版。なつかしき昭和の味。販売店指定・数量限定販売ですのでお早めに。', img:'img/SSCN05991.JPG', sizes:[{s:'1800ml',p:2450}], badges:['販売店指定','数量限定'], note:'', inStock:true},
-  {id:26, cat:'others', group:'流川（るかわ）',           name:'', kura:'', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
-  {id:27, cat:'limited', group:'鬼武蔵（大口酒造）',       name:'', kura:'大口酒造 ※値上げ済', desc:'焼酎「伊佐錦」の大口酒造の鹿児島限定商品。貯蔵酒を吟味・厳選しブレンド。力強くも豊かな芋の味わいと甘く香り高い逸品。', img:'img/20260116_1019314191.JPG', sizes:[{s:'1800ml',p:4280},{s:'720ml',p:1830}], badges:['鹿児島限定'], note:'', inStock:false},
-  {id:28, cat:'limited', group:'薩摩茶屋 鹿児島美人（村尾酒造）', name:'', kura:'村尾酒造 25度', desc:'史跡・薩摩藩公御茶屋跡にちなんで命名。原料は黄金千貫・白豊。黒こうじ甕壺仕込み。', img:'img/20251215_1548158321.JPG', sizes:[{s:'1800ml',p:2380}], badges:['鹿児島限定'], note:'', inStock:true},
-  {id:29, cat:'limited', group:'篤姫（鹿児島限定）',       name:'', kura:'', desc:'鹿児島県長島町の五つの蔵の結晶。「篤姫酵母」で仕込みました。', img:'', sizes:[{s:'1800ml',p:2000}], badges:['鹿児島限定'], note:'', inStock:true},
-  {id:30, cat:'limited', group:'鹿児島限定（相良酒造）',   name:'', kura:'相良酒造', desc:'昔ながらのクセのある芋焼酎。コガネセンガンを原料に白麹をブレンドして仕込みました。', img:'img/DSC_08701.png', sizes:[{s:'1800ml',p:2290}], badges:['鹿児島限定'], note:'', inStock:true},
-  {id:31, cat:'limited', group:'しま安納（高崎酒造）',     name:'', kura:'高崎酒造', desc:'安納芋を原料とした芋焼酎。安納芋から引き出される甘味とふくよかな芋の香りが楽しめます。', img:'img/SSCN0152.JPG', sizes:[{s:'1800ml',p:2800}], badges:['鹿児島限定'], note:'', inStock:true},
-  {id:32, cat:'limited', group:'紅芋 復刻版（昭和の味）', name:'', kura:'', desc:'昭和の人気焼酎の復刻版。紅芋の華やかで上質な香りとなめらかな味わい。黒こうじ造り。', img:'img/SSCN09192.JPG', sizes:[{s:'1800ml',p:2270}], badges:['鹿児島限定','昭和の味 復刻版'], note:'', inStock:true},
+  {id:9,  cat:'premire', group:'だいやめ（濱田酒造）', name:'', kura:'濱田酒造', desc:'ライチのように香る芋焼酎。瑞々しいライチを思わせる甘い香りが膨らみます。', img:'img/ISAMI11.JPG', sizes:[{s:'1800ml',p:2670},{s:'900ml',p:1410}], badges:[], note:'ライチを思わせる甘い香り', inStock:true},
+  {id:10, cat:'shirotama', group:'ちご桜（白金酒造）',           name:'', kura:'白金酒造', desc:'吟醸酵母仕込み。吟醸香が引き立ち、華やかでさわやかな味わいが特徴。', img:'', sizes:[{s:'1800ml',p:2120},{s:'900ml',p:1160}], badges:[], note:'吟醸酵母仕込み・華やかな香り', inStock:true},
+  {id:11, cat:'shirotama', group:'白金吟酒（白金酒造）',         name:'', kura:'白金酒造', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
+  {id:12, cat:'others', group:'女王蜂（白玉酒造）',              name:'', kura:'白玉酒造', desc:'魔王の蔵元の焼酎。米焼酎をベースに芋焼酎をブレンド。まろみが調和した風味豊かな焼酎。', img:'img/IMG_2023-06-03-09-58-45-703%20(1).jpg', sizes:[{s:'1800ml',p:2210}], badges:[], note:'米焼酎x芋焼酎ブレンド', inStock:true},
+  {id:13, cat:'others', group:'天誅（てんちゅう）',              name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/DSC_05161.png', sizes:[], badges:[], note:'', inStock:true},
+  {id:14, cat:'others', group:'三岳（三岳酒造）',                name:'', kura:'三岳酒造', desc:'世界自然遺産登録の屋久島の蔵元で造られました。ぬる燗・お湯割りでお楽しみください。', img:'img/DSC_07681.png', sizes:[{s:'1800ml',p:2570},{s:'900ml',p:1420}], badges:[], note:'世界自然遺産・屋久島の蔵元', inStock:true},
+  {id:15, cat:'others', group:'くじら（大海酒造）',              name:'', kura:'大海酒造', desc:'黄金千貫・白こうじ・常圧蒸留で造った芋焼酎のスタンダード。鹿児島県垂水の「寿鶴」を使用。', img:'img/DSC_07691.png', sizes:[{s:'1800ml',p:2920}], badges:[], note:'鹿児島県垂水・ぬる燗・お湯割りで', inStock:true},
+  {id:16, cat:'others', group:'別撰MUGEN白波',                   name:'', kura:'薩摩酒造', desc:'三つの蒸留所からそれぞれの厳選された原酒を最適な割合でブレンド。お湯割専用追求。', img:'', sizes:[{s:'1800ml',p:2750},{s:'900ml',p:1430}], badges:[], note:'3蒸留所ブレンド', inStock:true},
+  {id:17, cat:'others', group:'麦・芋ブレンド長期貯蔵（魔王蔵元）', name:'', kura:'白玉酒造', desc:'麦焼酎の旨味と芋焼酎のふくよかな味わいがバランス良くブレンドされたまろやかな逸品。★魔王の蔵元。', img:'img/DSC_04312.png', sizes:[{s:'1800ml',p:2320}], badges:[], note:'まろやかな逸品', inStock:true},
+  {id:18, cat:'others', group:'さつま島美人',                    name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/SSCN10081.JPG', sizes:[], badges:[], note:'', inStock:true},
+  {id:19, cat:'others', group:'さつま黒こうじ（佐藤酒造）',      name:'', kura:'佐藤酒造', desc:'「佐藤」で名を広めている佐藤酒造の焼酎。なかなか手に入りにくい商品。', img:'', sizes:[{s:'1800ml',p:2990}], badges:[], note:'「佐藤」蔵・入手困難', inStock:true},
+  {id:20, cat:'others', group:'元祖まぼろし',                    name:'', kura:'', desc:'創業当初から黒こうじ一筋。口当たりがよく、甘みのあるまろやかな味わいで非常に人気の高い芋焼酎。', img:'img/SSCN04761.JPG', sizes:[{s:'1800ml',p:2900},{s:'720ml',p:1860}], badges:['数量限定'], note:'黒こうじ一筋・まろやかな味わい', inStock:true},
+  {id:21, cat:'others', group:'さつまの梅酒（元老院）',           name:'', kura:'白玉酒造', desc:'魔王の蔵元が造った梅酒。まろやかな味わいはお食事のひと時を優雅にしてくれます。', img:'img/DSC_04302.png', sizes:[{s:'1800ml',p:1890},{s:'900ml',p:970}], badges:[], note:'魔王の蔵元・まろやかな梅酒', inStock:true},
+  {id:22, cat:'others', group:'甕 長期熟成',                     name:'', kura:'', desc:'5つの蔵元の芋焼酎をブレンドし、甕でじっくり季節を重ねた長期熟成の本格芋焼酎。化粧箱入り。', img:'img/SSCN05971.JPG', sizes:[{s:'1800ml',p:2670}], badges:['年3回限定','化粧箱入り'], note:'5蔵ブレンド・年3回限定', inStock:true},
+  {id:23, cat:'others', group:'れんと（奄美大島開運酒造）',       name:'', kura:'奄美大島開運酒造', desc:'奄美の最高峰「湯湾岳」の名水と黒糖がベース。名曲を聴かせて3か月以上熟成。', img:'', sizes:[{s:'1800ml',p:2200},{s:'900ml',p:1180}], badges:[], note:'奄美・黒糖ベース、名曲熟成3か月以上', inStock:true},
+  {id:24, cat:'others', group:'相良仲右衛門（相良酒造）',         name:'', kura:'相良酒造', desc:'黒こうじ造り・30度。創業者「仲右衛門」の名にちなんで命名。', img:'img/080830_165518.JPG', sizes:[{s:'1800ml',p:2490}], badges:[], note:'黒こうじ造り・30度', inStock:true},
+  {id:25, cat:'others', group:'復刻版 兵六（ひょうろく）',        name:'', kura:'', desc:'昭和の人気焼酎の復刻版。なつかしき昭和の味。販売店指定・数量限定販売ですのでお早めに。', img:'img/SSCN05991.JPG', sizes:[{s:'1800ml',p:2450}], badges:['販売店指定','数量限定'], note:'昭和の味 復刻版・限定販売', inStock:true},
+  {id:26, cat:'others', group:'流川（るかわ）',                   name:'', kura:'', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
+  {id:27, cat:'limited', group:'鬼武蔵（大口酒造）',              name:'', kura:'大口酒造 ※値上げ済', desc:'焼酎「伊佐錦」の大口酒造の鹿児島限定商品。貯蔵酒を吟味・厳選しブレンド。力強くも豊かな芋の味わいと甘く香り高い逸品。', img:'img/20260116_1019314191.JPG', sizes:[{s:'1800ml',p:4280},{s:'720ml',p:1830}], badges:['鹿児島限定'], note:'貯蔵酒厳選ブレンド', inStock:false},
+  {id:28, cat:'limited', group:'薩摩茶屋 鹿児島美人（村尾酒造）',name:'', kura:'村尾酒造 25度', desc:'史跡・薩摩藩公御茶屋跡にちなんで命名。原料は黄金千貫・白豊。黒こうじ甕壺仕込み。', img:'img/20251215_1548158321.JPG', sizes:[{s:'1800ml',p:2380}], badges:['鹿児島限定'], note:'黒こうじ甕壺仕込み・鹿児島限定', inStock:true},
+  {id:29, cat:'limited', group:'篤姫（鹿児島限定）',              name:'', kura:'', desc:'鹿児島県長島町の五つの蔵の結晶。「篤姫酵母」で仕込みました。', img:'', sizes:[{s:'1800ml',p:2000}], badges:['鹿児島限定'], note:'篤姫酵母・五つの蔵の結晶', inStock:true},
+  {id:30, cat:'limited', group:'鹿児島限定（相良酒造）',          name:'', kura:'相良酒造', desc:'昔ながらのクセのある芋焼酎。コガネセンガンを原料に白麹をブレンドして仕込みました。', img:'img/DSC_08701.png', sizes:[{s:'1800ml',p:2290}], badges:['鹿児島限定'], note:'白麹ブレンド・昔ながらの芋焼酎', inStock:true},
+  {id:31, cat:'limited', group:'しま安納（高崎酒造）',            name:'', kura:'高崎酒造', desc:'安納芋を原料とした芋焼酎。安納芋から引き出される甘味とふくよかな芋の香りが楽しめます。', img:'img/SSCN0152.JPG', sizes:[{s:'1800ml',p:2800}], badges:['鹿児島限定'], note:'安納芋使用・種子島産', inStock:true},
+  {id:32, cat:'limited', group:'紅芋 復刻版（昭和の味）',         name:'', kura:'', desc:'昭和の人気焼酎の復刻版。紅芋の華やかで上質な香りとなめらかな味わい。黒こうじ造り。', img:'img/SSCN09192.JPG', sizes:[{s:'1800ml',p:2270}], badges:['鹿児島限定','昭和の味 復刻版'], note:'紅芋・黒こうじ造り・限定販売', inStock:true},
 ];
-
-function getProds(){
-  const s = localStorage.getItem(DATA_KEY);
-  return s ? JSON.parse(s) : JSON.parse(JSON.stringify(MASTER_DEFAULTS));
+async function getProds(){
+  const res = await fetch('master.json');
+  return await res.json();
 }
+
+async function renderAll(){
+  const prods = await getProds();
 
 const ORIG_GOEK_META = {ruby:'まぼろしの ごせっきょう', title:'幻の五石橋', tag:'当店だけのオリジナル焼酎。店主が割水・味・口当たり・デザイン等、全てにこだわった焼酎です。<br>平成7年の大水害で流出した甲突川の五大石橋を忘れないようにとの思いを込めて。'};
 const ORIG_NON_META  = {ruby:'のんびより', title:'飲ん日和', tag:'桜島の絵をラベルにし、まさに鹿児島をイメージした焼酎。黒こうじ造り。<br>「飲んびよい　燃えて色づく　桜島」'};
 
-const CAT_ORDER = ['original-goek','original-non','kokubun','hamada','shirogane','others','limited'];
-const CAT_SEC   = {'original-goek':'sec-original','original-non':'sec-original','kokubun':'sec-kokubun','hamada':'sec-hamada','shirogane':'sec-shirogane','others':'sec-others','limited':'sec-limited'};
-const CAT_LABEL = {'kokubun':'国分酒造','hamada':'濱田酒造','shirogane':'白金酒造','others':'その他の銘柄','limited':'鹿児島限定商品'};
+const CAT_ORDER = ['original-goek','original-non','kokubun','premire','shirotama','others','limited'];
+const CAT_SEC   = {'original-goek':'sec-original','original-non':'sec-original','kokubun':'sec-kokubun','premire':'sec-premire','shirotama':'sec-shirotama','others':'sec-others','limited':'sec-limited'};
+const CAT_LABEL = {'kokubun':'国分酒造','premire':'プレミア','shirotama':'白玉酒造','others':'その他の銘柄','limited':'鹿児島限定商品'};
 
 function badgeCls(b){ return b.includes('完売')?'badge-sold':b.includes('限定')||b.includes('限')?'badge-limit':b.includes('発売')?'badge-new':'badge-rare'; }
 
-function renderAll(){
-  const prods = getProds();
   // Clear sections
   document.getElementById('sec-original').innerHTML = '';
-  ['kokubun','hamada','shirogane','others','limited'].forEach(cat => { document.getElementById('sec-'+cat).innerHTML = ''; });
+  ['kokubun','premire','shirotama','others','limited'].forEach(cat => { document.getElementById('sec-'+cat).innerHTML = ''; });
 
   // オリジナル
   ['original-goek','original-non'].forEach(cat => {
@@ -225,7 +223,7 @@ function renderAll(){
   });
 
   // 通常カテゴリ
-  ['kokubun','hamada','shirogane','others','limited'].forEach(cat => {
+  ['kokubun','premire','shirotama','others','limited'].forEach(cat => {
     const items = prods.filter(p => p.cat === cat);
     if(!items.length) return;
     const card = document.createElement('div');
@@ -253,15 +251,13 @@ function navTo(id, btn){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
 }
-const SECS=['sec-original','sec-kokubun','sec-hamada','sec-shirogane','sec-others','sec-limited','sec-pairing'];
+const SECS=['sec-original','sec-kokubun','sec-premire','sec-shirotama','sec-others','sec-limited','sec-pairing'];
 window.addEventListener('scroll',()=>{
   let cur=0;
   SECS.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=90)cur=i;});
   document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active',i===cur));
 },{passive:true});
 
-// storageイベントで他ページの変更を即反映
-window.addEventListener('storage', e => { if(e.key===DATA_KEY) renderAll(); });
 
 renderAll();
 </script>
