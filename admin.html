@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理画面｜鶴田酒店</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0a0a2a; --bg2:#0f0f3a; --bg3:#151540;
+      --navy:#000099; --orange:#e86400; --orange2:#ff8c2a;
+      --red:#cc0000; --green:#2a8a2a;
+      --text:#ccd; --border:#223366; --muted:#6678aa;
+      --white:#f4f9ff; --card:#0f0f3a;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;}
+
+    /* ── ログイン画面 ── */
+    .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+    .login-box{background:var(--bg2);border:2px solid var(--orange);border-radius:16px;padding:40px 28px;max-width:320px;width:100%;text-align:center;}
+    .login-icon{font-size:44px;margin-bottom:14px;}
+    .login-title{font-family:'Noto Serif JP',serif;font-size:18px;color:var(--orange);letter-spacing:0.1em;margin-bottom:6px;}
+    .login-sub{font-size:11px;color:var(--muted);margin-bottom:22px;}
+    .login-input{width:100%;padding:13px;border:1.5px solid var(--border);border-radius:8px;font-size:20px;text-align:center;letter-spacing:0.3em;background:#000033;color:var(--white);-webkit-appearance:none;margin-bottom:10px;}
+    .login-input:focus{outline:none;border-color:var(--orange);}
+    .login-err{font-size:12px;color:var(--red);margin-bottom:10px;min-height:18px;}
+    .login-btn{width:100%;padding:13px;background:var(--orange);border:none;border-radius:8px;color:#fff;font-family:'Noto Serif JP',serif;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.1em;}
+    .login-hint{font-size:11px;color:var(--muted);margin-top:12px;}
+
+    /* ── メイン管理画面 ── */
+    .admin-wrap{display:none;flex-direction:column;min-height:100vh;}
+    .admin-wrap.show{display:flex;}
+
+    .top-bar{background:linear-gradient(90deg,#000066,#000099);border-bottom:2px solid var(--orange);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50;}
+    .top-title{font-family:'Noto Serif JP',serif;font-size:16px;color:var(--orange);letter-spacing:0.12em;}
+    .top-right{display:flex;gap:8px;align-items:center;}
+    .top-badge{font-size:10px;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.07);padding:4px 10px;border-radius:20px;}
+    .logout-btn{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:rgba(255,255,255,0.5);padding:6px 12px;font-size:11px;cursor:pointer;}
+
+    /* タブナビ */
+    .tab-nav{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+    .tab-nav::-webkit-scrollbar{display:none;}
+    .tab-btn{background:none;border:none;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:13px;padding:13px 18px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;-webkit-tap-highlight-color:transparent;}
+    .tab-btn.active{color:var(--orange);border-bottom-color:var(--orange);}
+
+    .tab-content{display:none;flex:1;overflow-y:auto;padding:16px;}
+    .tab-content.active{display:block;}
+
+    /* ── 共通パネルUI ── */
+    .panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;}
+    .panel-head{background:rgba(0,0,100,0.4);padding:11px 15px;font-family:'Noto Serif JP',serif;font-size:13px;color:var(--orange);letter-spacing:0.08em;border-bottom:1px solid var(--border);}
+    .panel-body{padding:14px 15px;}
+
+    .form-row{display:flex;gap:10px;margin-bottom:12px;}
+    .form-row:last-child{margin-bottom:0;}
+    .form-field{flex:1;}
+    .form-field label{font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:4px;display:block;}
+    .form-field input,.form-field select,.form-field textarea{
+      width:100%;padding:9px 11px;background:#000044;border:1.5px solid var(--border);
+      border-radius:7px;color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:14px;
+      -webkit-appearance:none;
+    }
+    .form-field input:focus,.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--orange);}
+    .form-field textarea{min-height:70px;resize:vertical;font-size:12px;}
+    .form-field select option{background:#000044;}
+    .check-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+    .check-row label{font-size:13px;color:var(--text);}
+    .check-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;}
+    .save-btn{width:100%;padding:12px;background:var(--orange);border:none;border-radius:7px;color:#fff;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.08em;margin-top:4px;}
+    .save-btn:active{opacity:0.85;}
+    .sub-btn{padding:8px 16px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;}
+    .danger-btn{padding:11px;width:100%;background:none;border:1px solid #442222;border-radius:7px;color:#c44;font-size:12px;cursor:pointer;margin-top:10px;}
+
+    /* 商品リスト（管理用） */
+    .add-btn{display:block;width:100%;padding:13px;background:none;border:2px dashed var(--orange);border-radius:9px;color:var(--orange);font-family:'Noto Serif JP',serif;font-size:13px;cursor:pointer;letter-spacing:0.1em;margin-bottom:14px;text-align:center;}
+    .group-label{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.12em;padding:8px 2px 4px;margin-top:4px;}
+    .prod-row{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+    .prod-row-info{flex:1;min-width:0;}
+    .prod-row-name{font-size:13px;color:var(--white);font-family:'Noto Serif JP',serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .prod-row-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+    .prod-row-price{font-family:'Noto Serif JP',serif;font-size:12px;color:var(--orange);white-space:nowrap;margin-right:4px;}
+    .prod-row-btns{display:flex;gap:4px;flex-shrink:0;}
+    .r-btn{border:none;border-radius:5px;padding:5px 8px;font-size:10px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap;}
+    .r-btn.stock{background:#0a2a0a;color:#5c5;border:1px solid #0a400a;}
+    .r-btn.sold{background:#2a2a2a;color:#888;border:1px solid #333;}
+    .r-btn.edit{background:#1a1a2a;color:#aac;border:1px solid #334;}
+    .r-btn.del{background:#2a0a0a;color:#e55;border:1px solid #400a0a;}
+
+    /* 商品編集ドロワー */
+    .drawer-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.88);align-items:flex-end;justify-content:center;}
+    .drawer-overlay.show{display:flex;}
+    .drawer{background:var(--bg2);border-radius:18px 18px 0 0;border:1px solid var(--border);padding:20px 16px 36px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
+    .drawer-title{font-family:'Noto Serif JP',serif;font-size:15px;color:var(--orange);margin-bottom:18px;letter-spacing:0.08em;}
+    .drawer-btns{display:flex;gap:8px;margin-top:16px;}
+    .d-save{flex:1;padding:12px;background:var(--orange);border:none;border-radius:7px;color:#fff;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:600;cursor:pointer;}
+    .d-cancel{padding:12px 16px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:13px;cursor:pointer;}
+
+    /* サイズ行 */
+    .size-rows{margin-bottom:10px;}
+    .size-row{display:flex;gap:8px;margin-bottom:7px;align-items:center;}
+    .size-row input{flex:1;padding:8px 10px;background:#000044;border:1.5px solid var(--border);border-radius:6px;color:var(--white);font-size:14px;}
+    .size-row input:focus{outline:none;border-color:var(--orange);}
+    .size-del{background:none;border:none;color:#e55;font-size:18px;cursor:pointer;flex-shrink:0;padding:0 4px;}
+    .size-add{background:none;border:1px dashed var(--border);border-radius:6px;color:var(--muted);font-size:11px;padding:6px 12px;cursor:pointer;width:100%;margin-top:2px;}
+
+    /* 成功トースト */
+    .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--green);color:#fff;padding:10px 22px;border-radius:8px;font-size:13px;transition:transform 0.3s;z-index:999;white-space:nowrap;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+
+    /* リンクボタン */
+    .page-link{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--white);font-size:13px;margin-bottom:8px;}
+    .page-link:active{background:#1a1a4a;}
+    .page-link-arrow{color:var(--orange);font-size:16px;}
+  </style>
+</head>
+<body>
+
+<!-- ══ ログイン画面 ══ -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-box">
+    <div class="login-icon">🔑</div>
+    <div class="login-title">鶴田酒店 管理画面</div>
+    <div class="login-sub">パスワードを入力してください</div>
+    <input type="password" class="login-input" id="login-pw" placeholder="****" maxlength="20" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-err" id="login-err"></div>
+    <button class="login-btn" onclick="doLogin()">ログイン</button>
+    <div class="login-hint">初期パスワード：1234</div>
+  </div>
+</div>
+
+<!-- ══ 管理画面メイン ══ -->
+<div class="admin-wrap" id="admin-wrap">
+
+  <div class="top-bar">
+    <div class="top-title">鶴田酒店 管理画面</div>
+    <div class="top-right">
+      <span class="top-badge">全ページ共通</span>
+      <button class="logout-btn" onclick="doLogout()">ログアウト</button>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('tab-products',this)">商品管理</button>
+    <button class="tab-btn" onclick="switchTab('tab-settings',this)">設定</button>
+    <button class="tab-btn" onclick="switchTab('tab-pages',this)">ページへ移動</button>
+  </div>
+
+  <!-- ── タブ：商品管理 ── -->
+  <div class="tab-content active" id="tab-products">
+    <button class="add-btn" onclick="openDrawer(null)">＋ 商品を追加する</button>
+    <div id="prod-list"></div>
+    <button class="danger-btn" onclick="resetAll()">⚠ 商品リストを初期値にリセット</button>
+  </div>
+
+  <!-- ── タブ：設定 ── -->
+  <div class="tab-content" id="tab-settings">
+
+    <div class="panel">
+      <div class="panel-head">📧 メール送信先（Formspree）</div>
+      <div class="panel-body">
+        <p style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:12px;">
+          申し込みフォームからのメールを直接受け取るには：<br>
+          1. <strong style="color:var(--orange);">formspree.io</strong> で無料登録<br>
+          2. New Form を作成してURLをコピー<br>
+          3. 下に貼り付けて保存
+        </p>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Formspree URL</label>
+            <input type="text" id="fs-url" placeholder="https://formspree.io/f/xxxxxxxx">
+          </div>
+        </div>
+        <button class="save-btn" onclick="saveFs()">保存する</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">🔑 パスワード変更</div>
+      <div class="panel-body">
+        <div class="form-row">
+          <div class="form-field">
+            <label>新しいパスワード</label>
+            <input type="password" id="new-pw" placeholder="新しいパスワード">
+          </div>
+        </div>
+        <button class="save-btn" onclick="savePw()">パスワードを変更する</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── タブ：ページへ移動 ── -->
+  <div class="tab-content" id="tab-pages">
+    <div style="margin-bottom:14px;">
+      <p style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:12px;">
+        この管理画面で変更した内容は、同じブラウザで開く以下のページに自動で反映されます。
+      </p>
+      <a class="page-link" href="syouhin.html" target="_blank">
+        <span>🍶 商品案内ページ</span>
+        <span class="page-link-arrow">→</span>
+      </a>
+      <a class="page-link" href="order-form.html" target="_blank">
+        <span>📝 お申し込みフォーム</span>
+        <span class="page-link-arrow">→</span>
+      </a>
+    </div>
+    <div class="panel">
+      <div class="panel-head">ℹ️ 使い方</div>
+      <div class="panel-body" style="font-size:12px;color:var(--muted);line-height:1.9;">
+        <strong style="color:var(--text);">商品管理タブ</strong><br>
+        商品の追加・編集・削除・在庫切り替えができます。<br>
+        変更は即座に商品ページと申し込みフォームに反映されます。<br><br>
+        <strong style="color:var(--text);">在庫切り替え</strong><br>
+        「完売」にした商品は申し込みフォームで選択できなくなり、商品ページでも完売表示になります。<br><br>
+        <strong style="color:var(--text);">データの保存場所</strong><br>
+        データはこのブラウザのlocalStorageに保存されます。同じ端末・ブラウザでページを開いてください。
+      </div>
+    </div>
+  </div>
+
+</div><!-- /admin-wrap -->
+
+<!-- 商品編集ドロワー -->
+<div class="drawer-overlay" id="drawer-overlay">
+  <div class="drawer">
+    <div class="drawer-title" id="drawer-title">商品を追加</div>
+
+    <div class="form-row">
+      <div class="form-field" style="flex:2;">
+        <label>グループ名（申し込みフォームでの表示）</label>
+        <input type="text" id="d-group" placeholder="例：まぼろしの五石橋（当店オリジナル）" list="d-group-dl">
+        <datalist id="d-group-dl"></datalist>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>カテゴリ（商品ページでの分類）</label>
+        <select id="d-cat">
+          <option value="original-goek">五石橋（オリジナル）</option>
+          <option value="original-non">飲ん日和（オリジナル）</option>
+          <option value="kokubun">国分酒造</option>
+          <option value="premier">プレミア</option>
+          <option value="shirotama">白玉酒造(魔王蔵元）</option>
+          <option value="others">その他</option>
+          <option value="limited">鹿児島限定</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>商品名・飲み方（任意）</label>
+        <input type="text" id="d-name" placeholder="例：お湯割り用、ロック専用">
+      </div>
+      <div class="form-field">
+        <label>蔵元・補足</label>
+        <input type="text" id="d-kura" placeholder="例：国分酒造">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>説明文（商品ページ表示）</label>
+        <textarea id="d-desc" placeholder="味わいの説明など"></textarea>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>商品メモ（申し込みフォームに表示）</label>
+        <input type="text" id="d-note" placeholder="例：数量限定、芋の風味豊か など">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>商品画像URL（任意）</label>
+        <input type="text" id="d-img" placeholder="https://...">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>バッジ（カンマ区切り、任意）</label>
+        <input type="text" id="d-badges" placeholder="例：鹿児島限定,数量限定">
+      </div>
+    </div>
+
+    <div style="font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:6px;">容量・価格（複数設定可）</div>
+    <div class="size-rows" id="size-rows"></div>
+    <button class="size-add" onclick="addSizeRow()">＋ 容量・価格を追加</button>
+
+    <div class="check-row" style="margin-top:12px;">
+      <input type="checkbox" id="d-instock" checked>
+      <label for="d-instock">在庫あり（外すと「完売」表示）</label>
+    </div>
+
+    <div class="drawer-btns">
+      <button class="d-cancel" onclick="closeDrawer()">キャンセル</button>
+      <button class="d-save" onclick="saveDrawer()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- トースト -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// 共通マスターデータ
+// ══════════════════════════════════════════
+const MASTER_DEFAULTS = [
+  {id:1,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'お湯割り用',         kura:'', desc:'芋臭さをおさえたふくよかな旨味',                               img:'', sizes:[{s:'1800ml',p:2370}],                              badges:[],             note:'芋臭さをおさえたふくよかな旨味', inStock:true},
+  {id:2,  cat:'original-goek', group:'まぼろしの五石橋（当店オリジナル）', name:'ロック・水割り専用',  kura:'', desc:'フルーティでスッキリした味わいが大好評',                         img:'', sizes:[{s:'1800ml',p:2370},{s:'900ml',p:1280},{s:'720ml',p:1640}], badges:[],             note:'フルーティでスッキリした味わい大好評', inStock:true},
+  {id:3,  cat:'original-non',  group:'飲ん日和（当店オリジナル）',         name:'お湯割り・水割り用', kura:'', desc:'昔ながらの黒こうじ仕込み',                                       img:'', sizes:[{s:'1800ml',p:2050}],                              badges:[],             note:'昔ながらの黒こうじ仕込み',           inStock:true},
+  {id:4,  cat:'kokubun', group:'伊佐美（国分酒造）',                name:'', kura:'国分酒造', desc:'口に含むと軽やかな甘味、果実感がバランス良く広がります。2026年1月15日より発売。',  img:'img/IMG_2025-03-04-13-08-48-7461.jpg', sizes:[{s:'1800ml',p:3500},{s:'720ml',p:1750}],  badges:['2026年1月発売','販売数少'], note:'軽やかな甘味と果実感', inStock:true},
+  {id:5,  cat:'kokubun', group:'MUGEN白波 お湯割用（国分酒造）',   name:'', kura:'国分酒造', desc:'仕込み水に霧島山系の伏流水を使用。黄こうじ独特の香りと旨味を強調し、酸味の少ない味に仕上げています。', img:'', sizes:[{s:'1800ml',p:2590},{s:'720ml',p:1490}],  badges:[], note:'黄こうじ独特の香りと旨味', inStock:true},
+  {id:6,  cat:'kokubun', group:'大正の一滴（国分酒造）',           name:'', kura:'国分酒造', desc:'老麹造りの芋焼酎を再現。ラベルは焼酎粕を再利用した和紙。角のとれたまろみのある味わい。', img:'img/dezitaisyou.jpg', sizes:[{s:'1800ml',p:2420},{s:'720ml',p:1260}], badges:[], note:'老麹造り・焼酎粕の和紙ラベル', inStock:true},
+  {id:7,  cat:'kokubun', group:'芋（国分酒造）',                   name:'', kura:'国分酒造', desc:'その昔、芋だけで造った焼酎を復活。アルコール分26度。芋こうじ芋100%。', img:'', sizes:[{s:'1800ml',p:2680},{s:'720ml',p:1360}], badges:[], note:'芋こうじ芋100%・26度', inStock:true},
+  {id:8,  cat:'kokubun', group:'カイジュズ パッション（国分酒造）', name:'', kura:'国分酒造', desc:'詳細はお問い合わせください。', img:'img/IMG_2023-06-03-09-57-06-391%20(1)11.jpg', sizes:[], badges:[], note:'', inStock:true},
+  {id:9,  cat:'hamada', group:'だいやめ（濱田酒造）', name:'', kura:'濱田酒造', desc:'ライチのように香る芋焼酎。瑞々しいライチを思わせる甘い香りが膨らみます。', img:'img/ISAMI11.JPG', sizes:[{s:'1800ml',p:2670},{s:'900ml',p:1410}], badges:[], note:'ライチを思わせる甘い香り', inStock:true},
+  {id:10, cat:'shirogane', group:'ちご桜（白金酒造）',           name:'', kura:'白金酒造', desc:'吟醸酵母仕込み。吟醸香が引き立ち、華やかでさわやかな味わいが特徴。', img:'', sizes:[{s:'1800ml',p:2120},{s:'900ml',p:1160}], badges:[], note:'吟醸酵母仕込み・華やかな香り', inStock:true},
+  {id:11, cat:'shirogane', group:'白金吟酒（白金酒造）',         name:'', kura:'白金酒造', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
+  {id:12, cat:'others', group:'女王蜂（白玉酒造）',              name:'', kura:'白玉酒造', desc:'魔王の蔵元の焼酎。米焼酎をベースに芋焼酎をブレンド。まろみが調和した風味豊かな焼酎。', img:'img/IMG_2023-06-03-09-58-45-703%20(1).jpg', sizes:[{s:'1800ml',p:2210}], badges:[], note:'米焼酎x芋焼酎ブレンド', inStock:true},
+  {id:13, cat:'others', group:'天誅（てんちゅう）',              name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/DSC_05161.png', sizes:[], badges:[], note:'', inStock:true},
+  {id:14, cat:'others', group:'三岳（三岳酒造）',                name:'', kura:'三岳酒造', desc:'世界自然遺産登録の屋久島の蔵元で造られました。ぬる燗・お湯割りでお楽しみください。', img:'img/DSC_07681.png', sizes:[{s:'1800ml',p:2570},{s:'900ml',p:1420}], badges:[], note:'世界自然遺産・屋久島の蔵元', inStock:true},
+  {id:15, cat:'others', group:'くじら（大海酒造）',              name:'', kura:'大海酒造', desc:'黄金千貫・白こうじ・常圧蒸留で造った芋焼酎のスタンダード。鹿児島県垂水の「寿鶴」を使用。', img:'img/DSC_07691.png', sizes:[{s:'1800ml',p:2920}], badges:[], note:'鹿児島県垂水・ぬる燗・お湯割りで', inStock:true},
+  {id:16, cat:'others', group:'別撰MUGEN白波',                   name:'', kura:'薩摩酒造', desc:'三つの蒸留所からそれぞれの厳選された原酒を最適な割合でブレンド。お湯割専用追求。', img:'', sizes:[{s:'1800ml',p:2750},{s:'900ml',p:1430}], badges:[], note:'3蒸留所ブレンド', inStock:true},
+  {id:17, cat:'others', group:'麦・芋ブレンド長期貯蔵（魔王蔵元）', name:'', kura:'白玉酒造', desc:'麦焼酎の旨味と芋焼酎のふくよかな味わいがバランス良くブレンドされたまろやかな逸品。★魔王の蔵元。', img:'img/DSC_04312.png', sizes:[{s:'1800ml',p:2320}], badges:[], note:'まろやかな逸品', inStock:true},
+  {id:18, cat:'others', group:'さつま島美人',                    name:'', kura:'', desc:'詳細はお問い合わせください。', img:'img/SSCN10081.JPG', sizes:[], badges:[], note:'', inStock:true},
+  {id:19, cat:'others', group:'さつま黒こうじ（佐藤酒造）',      name:'', kura:'佐藤酒造', desc:'「佐藤」で名を広めている佐藤酒造の焼酎。なかなか手に入りにくい商品。', img:'', sizes:[{s:'1800ml',p:2990}], badges:[], note:'「佐藤」蔵・入手困難', inStock:true},
+  {id:20, cat:'others', group:'元祖まぼろし',                    name:'', kura:'', desc:'創業当初から黒こうじ一筋。口当たりがよく、甘みのあるまろやかな味わいで非常に人気の高い芋焼酎。', img:'img/SSCN04761.JPG', sizes:[{s:'1800ml',p:2900},{s:'720ml',p:1860}], badges:['数量限定'], note:'黒こうじ一筋・まろやかな味わい', inStock:true},
+  {id:21, cat:'others', group:'さつまの梅酒（元老院）',           name:'', kura:'白玉酒造', desc:'魔王の蔵元が造った梅酒。まろやかな味わいはお食事のひと時を優雅にしてくれます。', img:'img/DSC_04302.png', sizes:[{s:'1800ml',p:1890},{s:'900ml',p:970}], badges:[], note:'魔王の蔵元・まろやかな梅酒', inStock:true},
+  {id:22, cat:'others', group:'甕 長期熟成',                     name:'', kura:'', desc:'5つの蔵元の芋焼酎をブレンドし、甕でじっくり季節を重ねた長期熟成の本格芋焼酎。化粧箱入り。', img:'img/SSCN05971.JPG', sizes:[{s:'1800ml',p:2670}], badges:['年3回限定','化粧箱入り'], note:'5蔵ブレンド・年3回限定', inStock:true},
+  {id:23, cat:'others', group:'れんと（奄美大島開運酒造）',       name:'', kura:'奄美大島開運酒造', desc:'奄美の最高峰「湯湾岳」の名水と黒糖がベース。名曲を聴かせて3か月以上熟成。', img:'', sizes:[{s:'1800ml',p:2200},{s:'900ml',p:1180}], badges:[], note:'奄美・黒糖ベース、名曲熟成3か月以上', inStock:true},
+  {id:24, cat:'others', group:'相良仲右衛門（相良酒造）',         name:'', kura:'相良酒造', desc:'黒こうじ造り・30度。創業者「仲右衛門」の名にちなんで命名。', img:'img/080830_165518.JPG', sizes:[{s:'1800ml',p:2490}], badges:[], note:'黒こうじ造り・30度', inStock:true},
+  {id:25, cat:'others', group:'復刻版 兵六（ひょうろく）',        name:'', kura:'', desc:'昭和の人気焼酎の復刻版。なつかしき昭和の味。販売店指定・数量限定販売ですのでお早めに。', img:'img/SSCN05991.JPG', sizes:[{s:'1800ml',p:2450}], badges:['販売店指定','数量限定'], note:'昭和の味 復刻版・限定販売', inStock:true},
+  {id:26, cat:'others', group:'流川（るかわ）',                   name:'', kura:'', desc:'詳細はお問い合わせください。', img:'', sizes:[], badges:[], note:'', inStock:true},
+  {id:27, cat:'limited', group:'鬼武蔵（大口酒造）',              name:'', kura:'大口酒造 ※値上げ済', desc:'焼酎「伊佐錦」の大口酒造の鹿児島限定商品。貯蔵酒を吟味・厳選しブレンド。力強くも豊かな芋の味わいと甘く香り高い逸品。', img:'img/20260116_1019314191.JPG', sizes:[{s:'1800ml',p:4280},{s:'720ml',p:1830}], badges:['鹿児島限定'], note:'貯蔵酒厳選ブレンド', inStock:false},
+  {id:28, cat:'limited', group:'薩摩茶屋 鹿児島美人（村尾酒造）',name:'', kura:'村尾酒造 25度', desc:'史跡・薩摩藩公御茶屋跡にちなんで命名。原料は黄金千貫・白豊。黒こうじ甕壺仕込み。', img:'img/20251215_1548158321.JPG', sizes:[{s:'1800ml',p:2380}], badges:['鹿児島限定'], note:'黒こうじ甕壺仕込み・鹿児島限定', inStock:true},
+  {id:29, cat:'limited', group:'篤姫（鹿児島限定）',              name:'', kura:'', desc:'鹿児島県長島町の五つの蔵の結晶。「篤姫酵母」で仕込みました。', img:'', sizes:[{s:'1800ml',p:2000}], badges:['鹿児島限定'], note:'篤姫酵母・五つの蔵の結晶', inStock:true},
+  {id:30, cat:'limited', group:'鹿児島限定（相良酒造）',          name:'', kura:'相良酒造', desc:'昔ながらのクセのある芋焼酎。コガネセンガンを原料に白麹をブレンドして仕込みました。', img:'img/DSC_08701.png', sizes:[{s:'1800ml',p:2290}], badges:['鹿児島限定'], note:'白麹ブレンド・昔ながらの芋焼酎', inStock:true},
+  {id:31, cat:'limited', group:'しま安納（高崎酒造）',            name:'', kura:'高崎酒造', desc:'安納芋を原料とした芋焼酎。安納芋から引き出される甘味とふくよかな芋の香りが楽しめます。', img:'img/SSCN0152.JPG', sizes:[{s:'1800ml',p:2800}], badges:['鹿児島限定'], note:'安納芋使用・種子島産', inStock:true},
+  {id:32, cat:'limited', group:'紅芋 復刻版（昭和の味）',         name:'', kura:'', desc:'昭和の人気焼酎の復刻版。紅芋の華やかで上質な香りとなめらかな味わい。黒こうじ造り。', img:'img/SSCN09192.JPG', sizes:[{s:'1800ml',p:2270}], badges:['鹿児島限定','昭和の味 復刻版'], note:'紅芋・黒こうじ造り・限定販売', inStock:true},
+];
+
+const PW_KEY   = 'sake_admin_pw';
+const DATA_KEY = 'sake_master';
+const FS_KEY   = 'sake_formspree';
+
+const CAT_LABELS = {
+  'original-goek':'五石橋（オリジナル）','original-non':'飲ん日和（オリジナル）',
+  'kokubun':'国分酒造','premier':'プレミア','shirotama':'白玉酒造（魔王蔵元）',
+  'others':'その他','limited':'鹿児島限定',
+};
+const CAT_ORDER = ['original-goek','original-non','kokubun','premier','shirotama','others','limited'];
+
+let prods = [];
+let editingId = null;
+
+function getPw(){ return localStorage.getItem(PW_KEY) || '1234'; }
+function load(){
+  const s = localStorage.getItem(DATA_KEY);
+  prods = s ? JSON.parse(s) : JSON.parse(JSON.stringify(MASTER_DEFAULTS));
+}
+function save(){
+  localStorage.setItem(DATA_KEY, JSON.stringify(prods));
+}
+function resetAll(){
+  if(!confirm('全商品を初期値にリセットします。よろしいですか？')) return;
+  prods = JSON.parse(JSON.stringify(MASTER_DEFAULTS));
+  save(); renderProdList(); toast('リセットしました');
+}
+
+// ── ログイン ──
+function doLogin(){
+  const v = document.getElementById('login-pw').value;
+  if(v === getPw()){
+    document.getElementById('login-wrap').style.display = 'none';
+    document.getElementById('admin-wrap').classList.add('show');
+    load(); renderProdList();
+    // Formspree URL読み込み
+    document.getElementById('fs-url').value = localStorage.getItem(FS_KEY) || '';
+  } else {
+    document.getElementById('login-err').textContent = 'パスワードが違います';
+    document.getElementById('login-pw').value = '';
+  }
+}
+function doLogout(){
+  document.getElementById('admin-wrap').classList.remove('show');
+  document.getElementById('login-wrap').style.display = '';
+  document.getElementById('login-pw').value = '';
+  document.getElementById('login-err').textContent = '';
+}
+document.getElementById('login-pw').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ── タブ ──
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── 設定 ──
+function saveFs(){
+  const url = document.getElementById('fs-url').value.trim();
+  localStorage.setItem(FS_KEY, url);
+  toast(url ? 'Formspree URLを保存しました' : 'URLが空です');
+}
+function savePw(){
+  const v = document.getElementById('new-pw').value.trim();
+  if(!v){ alert('新しいパスワードを入力してください。'); return; }
+  localStorage.setItem(PW_KEY, v);
+  document.getElementById('new-pw').value = '';
+  toast('パスワードを変更しました');
+}
+
+// ── 商品リスト描画 ──
+function renderProdList(){
+  let h = '';
+  CAT_ORDER.forEach(cat => {
+    const items = prods.filter(p => p.cat === cat);
+    if(!items.length) return;
+    h += `<div class="group-label">${CAT_LABELS[cat]}</div>`;
+    items.forEach(p => {
+      const priceStr = p.sizes && p.sizes.length ? '¥'+p.sizes[0].p.toLocaleString('ja-JP') : '－';
+      const sizesStr = p.sizes && p.sizes.length ? p.sizes.map(x=>x.s).join('・') : '—';
+      h += `<div class="prod-row">
+        <div class="prod-row-info">
+          <div class="prod-row-name">${p.group}${p.name?' / '+p.name:''}</div>
+          <div class="prod-row-sub">${sizesStr}${p.kura?' | '+p.kura:''}</div>
+        </div>
+        <div class="prod-row-price">${priceStr}〜</div>
+        <div class="prod-row-btns">
+          <button class="r-btn ${p.inStock?'stock':'sold'}" onclick="toggleStock(${p.id})">${p.inStock?'在庫◎':'完売'}</button>
+          <button class="r-btn edit" onclick="openDrawer(${p.id})">編集</button>
+          <button class="r-btn del" onclick="delProd(${p.id})">削除</button>
+        </div>
+      </div>`;
+    });
+  });
+  document.getElementById('prod-list').innerHTML = h;
+}
+
+function toggleStock(id){
+  const p = prods.find(x => x.id === id);
+  if(p){ p.inStock = !p.inStock; save(); renderProdList(); toast(p.inStock?'在庫ありに変更':'完売に変更'); }
+}
+function delProd(id){
+  if(!confirm('この商品を削除しますか？')) return;
+  prods = prods.filter(p => p.id !== id);
+  save(); renderProdList(); toast('削除しました');
+}
+
+// ── ドロワー（編集モーダル） ──
+function openDrawer(id){
+  editingId = id;
+  const p = id ? prods.find(x => x.id === id) : null;
+  document.getElementById('drawer-title').textContent = id ? '商品を編集' : '商品を追加';
+  document.getElementById('d-group').value   = p ? p.group : '';
+  document.getElementById('d-cat').value     = p ? p.cat : 'others';
+  document.getElementById('d-name').value    = p ? p.name : '';
+  document.getElementById('d-kura').value    = p ? p.kura : '';
+  document.getElementById('d-desc').value    = p ? p.desc : '';
+  document.getElementById('d-note').value    = p ? p.note : '';
+  document.getElementById('d-img').value     = p ? p.img : '';
+  document.getElementById('d-badges').value  = p ? (p.badges||[]).join(',') : '';
+  document.getElementById('d-instock').checked = p ? p.inStock : true;
+
+  // グループ名サジェスト
+  document.getElementById('d-group-dl').innerHTML = [...new Set(prods.map(x=>x.group))].map(g=>`<option value="${g}">`).join('');
+
+  // サイズ行
+  const rows = document.getElementById('size-rows');
+  rows.innerHTML = '';
+  const sizes = p ? (p.sizes||[]) : [];
+  if(sizes.length){
+    sizes.forEach(({s,p:price}) => addSizeRow(s, price));
+  } else {
+    addSizeRow();
+  }
+
+  document.getElementById('drawer-overlay').classList.add('show');
+}
+function closeDrawer(){ document.getElementById('drawer-overlay').classList.remove('show'); }
+
+function addSizeRow(s='', p=''){
+  const rows = document.getElementById('size-rows');
+  const div = document.createElement('div');
+  div.className = 'size-row';
+  div.innerHTML = `<input type="text" placeholder="1800ml" value="${s}" style="flex:1.2;">
+    <input type="number" placeholder="価格（円）" value="${p}" inputmode="numeric" style="flex:1;">
+    <button class="size-del" onclick="this.parentElement.remove()">×</button>`;
+  rows.appendChild(div);
+}
+
+function saveDrawer(){
+  const group = document.getElementById('d-group').value.trim();
+  const cat   = document.getElementById('d-cat').value;
+  if(!group){ alert('グループ名を入力してください。'); return; }
+
+  const sizes = [];
+  document.querySelectorAll('#size-rows .size-row').forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const s = inputs[0].value.trim();
+    const p = parseInt(inputs[1].value);
+    if(s && p && !isNaN(p)) sizes.push({s, p});
+  });
+
+  const badges = document.getElementById('d-badges').value.split(',').map(x=>x.trim()).filter(Boolean);
+
+  const data = {
+    cat, group,
+    name:    document.getElementById('d-name').value.trim(),
+    kura:    document.getElementById('d-kura').value.trim(),
+    desc:    document.getElementById('d-desc').value.trim(),
+    note:    document.getElementById('d-note').value.trim(),
+    img:     document.getElementById('d-img').value.trim(),
+    sizes, badges,
+    inStock: document.getElementById('d-instock').checked,
+  };
+
+  if(editingId){
+    const p = prods.find(x => x.id === editingId);
+    if(p) Object.assign(p, data);
+  } else {
+    data.id = prods.length > 0 ? Math.max(...prods.map(p=>p.id)) + 1 : 1;
+    prods.push(data);
+  }
+
+  save(); renderProdList(); closeDrawer();
+  toast(editingId ? '更新しました' : '追加しました');
+}
+
+// ── トースト ──
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// 初期化
+load();
+</script>
+</body>
+</html>
