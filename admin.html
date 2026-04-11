@@ -297,7 +297,21 @@
     </div>
   </div>
 </div>
+<div class="panel">
+  <div class="panel-head">💾 バックアップ</div>
+  <div class="panel-body">
 
+    <button class="save-btn" onclick="exportData()">バックアップをダウンロード</button>
+
+    <input type="file" id="import-file" style="display:none" onchange="importData(event)">
+
+    <button class="sub-btn" onclick="document.getElementById('import-file').click()" style="margin-top:10px;width:100%;">
+      バックアップを読み込む
+    </button>
+
+  </div>
+</div>
+	
 <!-- トースト -->
 <div class="toast" id="toast"></div>
 
@@ -536,7 +550,46 @@ function toast(msg){
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2200);
 }
+// ── バックアップ（エクスポート） ──
+function exportData(){
+  const data = localStorage.getItem(DATA_KEY);
+  if(!data){
+    alert('保存データがありません');
+    return;
+  }
 
+  const blob = new Blob([data], {type: "application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "sake_backup.json";
+  a.click();
+
+  toast('バックアップをダウンロードしました');
+}
+
+// ── 復元（インポート） ──
+function importData(e){
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(){
+    try{
+      JSON.parse(reader.result); // JSONチェック
+      localStorage.setItem(DATA_KEY, reader.result);
+      toast('復元しました（リロードします）');
+
+      setTimeout(() => location.reload(), 1000);
+
+    }catch(err){
+      alert('ファイル形式が不正です');
+    }
+  };
+
+  reader.readAsText(file);
+}
+	
 // 初期化
 load();
 </script>
