@@ -560,13 +560,9 @@ async function handleSubmit(){
   btn.disabled = true; btn.textContent = '送信中...';
 
   if(!w3fKey){
-    const body = encodeURIComponent(
-      '【お申し込み内容】\n\nお名前：'+name+'\n郵便番号：'+postal+'\nご住所：'+fullAddr+'\n電話番号：'+tel+'\nメールアドレス：'+mail+
-      '\n\n【ご注文商品】\n'+orderText+'\n\n商品合計：'+totalStr+'\n\n【備考】\n'+(note||'なし')
-    );
-    window.location.href = 'mailto:syudo.t@po.minc.ne.jp?subject=' + encodeURIComponent('焼酎お申し込み：'+name+'様') + '&body=' + body;
     btn.disabled=false; btn.innerHTML='申し込みを送信する<small>※後ほど振込金額・振込先をご連絡します</small>';
-    closeOrder(); showDone(); return;
+    alert('送信設定が完了していません。\n管理画面の「設定」タブでWeb3Forms APIキーを登録してください。');
+    return;
   }
 
   try{
